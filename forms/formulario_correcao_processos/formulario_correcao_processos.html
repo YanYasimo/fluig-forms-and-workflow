@@ -1,0 +1,249 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+        <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+        <style>
+            body {
+                font-family: Roboto;
+                font-size: 12px;
+            }
+            .obrigatorio {
+                color: red;
+                padding-left: 2px;
+            }
+            .cards{
+                padding: 15px;
+                margin: auto;
+                width: 100%;
+            }
+            .card-solicitante{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-colaborador{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-alt {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-result {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .send {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                margin-top: 15px
+            }
+            .button {
+                padding-top: 15px;
+            }
+            #buttonSend {
+                color: white;
+                background-color: #00796B;
+                margin-left: 30px;
+            }
+        </style>
+        <script>
+
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+            
+            var indice = 0; // contador para gerar um valor para cada anexo
+            function showCamera() {
+                indice++;
+                JSInterface.showCamera("Anexo_" + indice);
+                        // css de confirmação visual
+                $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            
+            function send(){
+	            window.parent.$('[data-send]').first().click();
+            };
+
+            function discard() {
+                window.location.href=window.location.href;
+            };
+        </script>
+    </head>
+    <body>
+        <div class="fluig-style-guide">
+            <div class="header">
+                <h1>Formulário de Correção de Processos</h1>
+            </div>
+            <br><br>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <strong>Aviso!</strong> Campos marcados com <label class="obrigatorio">*</label> são obrigatórios.
+            </div>
+            <form name="form" role="form">
+                <div class="cards row">
+                    <div class="card card-solicitante col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do solicitante 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo" >
+                            <br>
+                            <label>Departamento</label><label class="obrigatorio">*</label> <br>
+                            <input
+                                type="zoom"
+                                id = "departamentos"
+                                name="departamentos"
+                                data-zoom="{
+                                    'displayKey':'Nome',
+                                    'datasetId':'dsDepartamentos',
+                                    'maximumSelectionLength':'1',
+                                    'placeholder':'Selecione o departamento',
+                                    'fields':[
+                                        {
+                                        'field':'Nome',
+                                        'label':'Departamento',
+                                        'standard':'true'
+                                        }
+                                    ]
+                                }"
+                            />
+                            <br>
+                            <br>
+                            <label>Número da chapa do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" >
+                            <br>
+                            <label>Email</label><label class="obrigatorio">*</label> <br>
+                            <input name="email" 
+                                class="form-control" 
+                                value="" 
+                                type="email" 
+                                placeholder="Digite o email" >
+        
+                        </div>
+                    </div>
+                </div>
+                <div class="cards row">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados da Solicitação
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Nome do processo a ser corrigido</label><label class="obrigatorio">*</label> <br>
+                                    <input name="processo" 
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Digite o nome do processo"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>O que deverá ser corrigido</label><label class="obrigatorio">*</label>
+                                    <br>
+                                    <small class="caracteres" for="correcao"></small>
+                                    <textarea name="correcao" 
+                                        id="correcao"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px; max-height: 300px;"
+                                        placeholder="Informe o que será necessário alterar"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Alguma alteração no fluxo?</label><br>
+                                    <input name="fluxo" 
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder=""
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Prioridade</label><br>
+                                    <input name="prioridade" 
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Informe o grau de prioridade"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Anexos
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexo" 
+                                            id="inputAnexo" 
+                                            value="Anexo" 
+                                            onclick="showCamera();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="info_tarefa" id="info_tarefa">
+                        <input type="hidden" name="status_solicitacao" id="status_solicitacao">
+                    </div>
+                </div>
+
+                
+                <div class="send">
+                    <div class="form-input">
+                        <input type="button"
+                            class="btn btn-danger button"
+                            name="buttonDiscard"
+                            id="buttonDiscard"
+                            value="Descartar"
+                            onclick="discard()"
+                        >
+
+                        <input type="button"
+                            class="btn btn-primary button"
+                            name="buttonSend"
+                            id="buttonSend"
+                            value="Enviar"
+                            onclick="send()"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

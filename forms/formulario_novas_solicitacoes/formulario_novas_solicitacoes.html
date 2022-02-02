@@ -1,0 +1,336 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+        <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+        <style>
+            body {
+                font-family: Roboto;
+                font-size: 12px;
+            }
+            .obrigatorio {
+                color: red;
+                padding-left: 2px;
+            }
+            .cards{
+                padding: 15px;
+                margin: auto;
+                width: 100%;
+            }
+            .card-solicitante{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-colaborador{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-alt {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-result {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .send {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                margin-top: 15px
+            }
+            .button {
+                padding-top: 15px;
+            }
+            #buttonSend {
+                color: white;
+                background-color: #00796B;
+                margin-left: 30px;
+            }
+        </style>
+        <script>
+            $(document).on("input", "#resumo", function() {
+                var limite = 500;
+                var informativo = "É necessário digitar mais ";
+                var concordancia = " caracteres.";
+                var caracteresDigitados = $(this).val().length;
+                var caracteresRestantes = limite - caracteresDigitados;
+                
+                if (caracteresRestantes <= 0) {
+                    $(".caracteres").text('');
+                }
+                else{
+                    if(caracteresRestantes == 1) concordancia = "caractere.";
+                    $(".caracteres").text(informativo + caracteresRestantes + concordancia);
+                }
+            });
+
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+            
+            var indice = 0; // contador para gerar um valor para cada anexo
+            function showCamera() {
+                indice++;
+                JSInterface.showCamera("Tratativa_" + indice);
+                        // css de confirmação visual
+                $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            
+            function send(){
+	            window.parent.$('[data-send]').first().click();
+            };
+
+            function discard() {
+                window.location.href=window.location.href;
+            };
+        </script>
+    </head>
+    <body>
+        <div class="fluig-style-guide">
+            <div class="header">
+                <h1>Formulário de Nova Solicitação de Processo no Fluig</h1>
+            </div>
+            <br><br>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <strong>Aviso!</strong> Campos marcados com <label class="obrigatorio">*</label> são obrigatórios.
+            </div>
+            <form name="form" role="form">
+                <div class="cards row">
+                    <div class="card card-solicitante col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do solicitante 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo" >
+                            <br>
+                            <label>Departamento</label><label class="obrigatorio">*</label> <br>
+                            <input
+                                type="zoom"
+                                id = "departamentos"
+                                name="departamentos"
+                                data-zoom="{
+                                    'displayKey':'Nome',
+                                    'datasetId':'dsDepartamentos',
+                                    'maximumSelectionLength':'1',
+                                    'placeholder':'Selecione o departamento',
+                                    'fields':[
+                                        {
+                                        'field':'Nome',
+                                        'label':'Departamento',
+                                        'standard':'true'
+                                        }
+                                    ]
+                                }"
+                            />
+                            <br>
+                            <br>
+                            <label>Número da chapa do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" >
+                            <br>
+                            <label>Email</label><label class="obrigatorio">*</label> <br>
+                            <input name="email" 
+                                class="form-control" 
+                                value="" 
+                                type="email" 
+                                placeholder="Digite o email" >
+                            <br>
+                            <label>Número da Solicitação</label><br>
+                            <input name="nrSolicitacao" 
+                                class="form-control" 
+                                type="text" 
+                                readonly
+                                style="width: 25%;"
+                                >
+        
+                        </div>
+                    </div>
+                </div>
+                <div class="cards row">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados da Solicitação
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <br>
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
+                                        <strong>Atenção!</strong> 
+                                        Para iniciarmos a implementação da sua solicitação obrigatoriamente deverá anexar o diagrama completo com suas respectivas atividades com prazos em horas de cada uma das atividades, além do anexo do formulário do processo feito no Google Forms.
+                                        Seguem links de tutoriais para te auxiliar na construção do diagrama e do formulário para o seu processo.
+                                    </div>
+
+                                    <label for="">Draw.io</label>
+                                    <br>
+                                    <a class="btn btn-default" role="button" target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/1ZJZU-1MPl4XgYFFqsL47NrhguqxH1vxn/view?usp=sharing">
+                                        <span class="fluigicon fluigicon-open-book icon-sm"></span>
+                                        Tutorial Draw.io
+                                    </a>
+                                    <a class="btn btn-default" role="button" style="padding-left: 10px;" href="https://drive.google.com/file/d/1ifg1yk82qzo5E3dhOpr7JYTu4jLv2xMr/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+                                        <span class="flaticon flaticon-link-broken icon-sm"></span>
+                                        Link para o Draw.io
+                                    </a>
+                                    <br><br>
+                                    <label for="">Google Forms</label>
+                                    <br>
+                                    <a class="btn btn-default" role="button" target="_blank" rel="noopener noreferrer" href="https://drive.google.com/file/d/1w0-2uZ6uF4JZMSVrOFjm5EXL_oxSGVv7/view?usp=sharing">
+                                        <span class="fluigicon fluigicon-open-book icon-sm"></span>
+                                        Tutorial Google Forms
+                                    </a>
+                                    <a class="btn btn-default" role="button" style="padding-left: 10px;" href="https://docs.google.com/forms/u/0/" target="_blank" rel="noopener noreferrer">
+                                        <span class="flaticon flaticon-link-broken icon-sm"></span>
+                                        Link para o Google Forms
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Departamentos que estarão envolvidos nas atividades dos processos</label><label class="obrigatorio">*</label> <br>
+                                    <input
+                                        type="zoom"
+                                        id = "departamentosEnvolvidos"
+                                        name="departamentosEnvolvidos"
+                                        data-zoom="{
+                                            'displayKey':'Nome',
+                                            'datasetId':'dsDepartamentos',
+                                            'maximumSelectionLength':'29',
+                                            'placeholder':'Selecione os departamentos',
+                                            'fields':[
+                                                {
+                                                'field':'Nome',
+                                                'label':'Departamento',
+                                                'standard':'true'
+                                                }
+                                            ]
+                                        }"
+                                    />
+                                    <br>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Finalidade do fluxo</label><label class="obrigatorio">*</label> <br>
+                                    <input name="finalidade" 
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Informe para qual finalidade o fluxo será utilizada"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Faça um resumo do fluxo</label><label class="obrigatorio">*</label>
+                                    <br>
+                                    <small class="caracteres" for="resumo"></small>
+                                    <textarea name="resumo" 
+                                        id="resumo"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px;"
+                                        placeholder="Faça um resumo sobre a solicitação"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Informe o gestor da solicitação</label><label class="obrigatorio">*</label>
+                                    <span style="padding-left: 10px;" data-placement="right" data-toggle="tooltip" title="Gestor é responsável pelo acompanhamento dos prazos das atividades e receberá alertas pela ferramenta Fluig e também via e-mail" class="flaticon flaticon-question icon-sm"></span>
+                                    <input name="gestor" 
+                                        id="gestor"
+                                        class="form-control" 
+                                        placeholder="Informe quem será o gestor"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Anexos
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexoDiagrama" 
+                                            id="inputAnexoDiagrama" 
+                                            value="Anexo do Diagrama em PDF" 
+                                            onclick="showCamera();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexoFormulario" 
+                                            id="inputAnexoFormulario" 
+                                            value="Anexo do Formulário em PDF" 
+                                            onclick="showCamera();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="info_tarefa" id="info_tarefa">
+                        <input type="hidden" name="status_solicitacao" id="status_solicitacao">
+                    </div>
+                </div>
+
+                
+                <div class="send">
+                    <div class="form-input">
+                        <input type="button"
+                            class="btn btn-danger button"
+                            name="buttonDiscard"
+                            id="buttonDiscard"
+                            value="Descartar"
+                            onclick="discard()"
+                        >
+
+                        <input type="button"
+                            class="btn btn-primary button"
+                            name="buttonSend"
+                            id="buttonSend"
+                            value="Enviar"
+                            onclick="send()"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,992 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+        <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+        <style>
+            body {
+                font-family: Roboto;
+                font-size: 12px;
+            }
+            .obrigatorio {
+                color: red;
+            }
+            .cards{
+                padding: 15px;
+                margin: auto;
+                width: 100%;
+            }
+            .card-solicitante{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-colaborador{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-alt {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-result {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .send {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                margin-top: 15px
+            }
+            .button {
+                padding-top: 15px;
+            }
+            #buttonSend {
+                color: white;
+                background-color: #00796B;
+                margin-left: 30px;
+            }
+        </style>
+        <script>
+            var tarefa_atual = $("#info_tarefa").val();
+            $(function(){
+                tarefa_atual = $("#info_tarefa").val();
+                
+                if(tarefa_atual == 5){
+                    $('input[name="destino"]').prop('checked', false);
+                    $('input[name="aprovado"]').prop('checked', false);
+                    $('input[name="reprovado"]').prop('checked', false);
+                    $('input[name="correcao"]').prop('checked', false);
+                    $('textarea#obs').val('');
+                    $("#radio-42").focus();
+                }
+                // else if(tarefa_atual == 13){
+                //     $("#inputAnexo").removeAttr('disabled');
+                // }
+                // else if(tarefa_atual == 66){
+                //     $("#inputAnexoExame").removeAttr('disabled');
+                // }
+            });
+
+            var indice = 0; // contador para gerar um valor para cada anexo
+            function showCamera() {
+                indice++;
+                JSInterface.showCamera("Arquivo_" + indice);
+                $("#inputAnexoTratativa___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            
+            function send(){
+	            window.parent.$('[data-send]').first().click();
+            };
+
+            function discard() {
+                window.location.href=window.location.href;
+            };
+
+            function init(){
+                tarefa_atual =              $("#info_tarefa").val();
+                
+                if(tarefa_atual == 5){
+                    $('input[name="destino"]').prop('checked', false);
+                    $('input[name="aprovado"]').prop('checked', false);
+                    $('input[name="reprovado"]').prop('checked', false);
+                    $('input[name="correcao"]').prop('checked', false);
+                    $('textarea#obs').val('');
+                    $("#radio-42").focus();
+                }
+                
+                var outrosCateg =           document.getElementById("checkbox-11").value;
+                var aumentoQuadro =         document.getElementById("radio-7").value;
+                var substituicao =          document.getElementById("radio-8").value;
+                var outrosIdade =           document.getElementById("radio-12").value;
+                var superiorIncompleto =    document.getElementById("radio-18").value;
+                var outrosHab =             document.getElementById("radio-30").value;
+                var trueVariavel =          document.getElementById("radio-33").value;
+
+                if( (aumentoQuadro === "" || aumentoQuadro === null) &&
+                    (substituicao === "" || substituicao === null)&&
+                    (outrosIdade === "" || outrosIdade === null) &&
+                    (superiorIncompleto === "" || superiorIncompleto === null) &&
+                    (outrosHab === "" || outrosHab === null) &&
+                    (trueVariavel === "" || trueVariavel === null)){
+                    $("#justificativaAumentoQuadro").attr('disabled', 'disabled');
+                    $("#justificativaSubstituicao").attr('disabled', 'disabled');
+                    $("#nomeSubstituido").attr('disabled', 'disabled');
+                    $("#saidaSubstituido").attr('disabled', 'disabled');
+                    $("#outrosIdade").attr('disabled', 'disabled');
+                    $("#periodo").attr('disabled', 'disabled');
+                    $("#outrosHab").attr('disabled', 'disabled');
+                    $("#radio-35").attr('disabled', 'disabled');
+                    $("#radio-36").attr('disabled', 'disabled');
+                    $("#radio-37").attr('disabled', 'disabled');
+                    $("#radio-38").attr('disabled', 'disabled');
+                    $("#condicoesVariavel").attr('disabled', 'disabled');
+                }
+                if(aumentoQuadro == "aumentoQuadro"){
+                    $("#justificativaAumentoQuadro").removeAttr('disabled');
+                }
+                if(substituicao == "substituicao"){
+                    $("#justificativaSubstituicao").removeAttr('disabled');
+                    $("#nomeSubstituido").removeAttr('disabled');
+                    $("#saidaSubstituido").removeAttr('disabled');
+                }
+                if(outrosIdade == "outrosIdade"){
+                    $("#outrosIdade").removeAttr('disabled');
+                }
+                if(superiorIncompleto == "superiorIncompleto"){
+                    $("#periodo").removeAttr('disabled');
+                }
+                if(outrosHab == "outrosHab"){
+                    $("#outrosHab").removeAttr('disabled');
+                }
+                if(trueVariavel == "true"){
+                    $("#radio-35").removeAttr('disabled');
+                    $("#radio-36").removeAttr('disabled');
+                    $("#radio-37").removeAttr('disabled');
+                    $("#radio-38").removeAttr('disabled');
+                    $("#condicoesVariavel").removeAttr('disabled');
+                }
+                
+
+            }
+
+            function aumentoQuadro(){
+                $("#justificativaAumentoQuadro").removeAttr('disabled');
+                $("#justificativaSubstituicao").attr('disabled', 'disabled');
+                $("#nomeSubstituido").attr('disabled', 'disabled');
+                $("#saidaSubstituido").attr('disabled', 'disabled');
+            }
+
+            function substituicao(){
+                $("#justificativaAumentoQuadro").attr('disabled', 'disabled');
+                $("#justificativaSubstituicao").removeAttr('disabled');
+                $("#nomeSubstituido").removeAttr('disabled');
+                $("#saidaSubstituido").removeAttr('disabled');
+            }
+
+            function desativaOutrosIdade(){
+                $("#outrosIdade").attr('disabled', 'disabled');
+            }
+
+            function ativaOutrosIdade(){
+                $("#outrosIdade").removeAttr('disabled');
+            }
+
+            function desativaPeriodo(){
+                $("#periodo").attr('disabled', 'disabled');
+            }
+
+            function ativaPeriodo(){
+                $("#periodo").removeAttr('disabled');
+            }
+
+            function desativaOutrosHab(){
+                $("#outrosHab").attr('disabled', 'disabled');
+            }
+
+            function ativaOutrosHab(){
+                $("#outrosHab").removeAttr('disabled');
+            }
+
+            function ativaTipoVariavel(){
+                $("#radio-35").removeAttr('disabled');
+                $("#radio-36").removeAttr('disabled');
+                $("#radio-37").removeAttr('disabled');
+                $("#radio-38").removeAttr('disabled');
+                $("#condicoesVariavel").removeAttr('disabled');
+            }
+
+            function desativaTipoVariavel(){
+                $("#radio-35").attr('disabled', 'disabled');
+                $("#radio-36").attr('disabled', 'disabled');
+                $("#radio-37").attr('disabled', 'disabled');
+                $("#radio-38").attr('disabled', 'disabled');
+                $("#condicoesVariavel").attr('disabled', 'disabled');
+                $('input[name="tipoVariavel"]').prop('checked', false);
+                $('input[name="radio35"]').prop('checked', false);
+                $('input[name="radio36"]').prop('checked', false);
+                $('input[name="radio37"]').prop('checked', false);
+                $('input[name="radio38"]').prop('checked', false);
+            }
+
+        </script>
+    </head>
+    <body onload="init()">
+        <div class="fluig-style-guide">
+            <div class="header">
+                <h1>Requisição de Pessoal</h1>
+            </div>
+            <br><br>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+                <strong>Aviso!</strong> Campos marcados com <label class="obrigatorio">*</label> são obrigatórios.
+            </div>
+            <form name="form" role="form">
+                <div class="cards row">
+                    <div class="card card-solicitante col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do solicitante 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo" >
+                            <br>
+                            <label>Departamento</label><label class="obrigatorio">*</label> <br>
+                            <input
+                                type="zoom"
+                                id = "departamentos"
+                                name="departamentos"
+                                data-zoom="{
+                                    'displayKey':'Nome',
+                                    'datasetId':'dsDepartamentos',
+                                    'maximumSelectionLength':'1',
+                                    'placeholder':'Selecione o departamento',
+                                    'fields':[
+                                        {
+                                        'field':'Nome',
+                                        'label':'Departamento',
+                                        'standard':'true'
+                                        }
+                                    ]
+                                }"
+                            />
+                            <br>
+                            <br>
+                            <label>Número da chapa do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" >
+                            <br>
+                            <label>Email</label><label class="obrigatorio">*</label> <br>
+                            <input name="email" 
+                                class="form-control" 
+                                value="" 
+                                type="email" 
+                                placeholder="Digite o email" >
+                                <br>
+                                <label>Número da Solicitação</label><br>
+                                <input name="nrSolicitacao" 
+                                    class="form-control" 
+                                    type="text" 
+                                    readonly
+                                    style="width: 25%;"
+                                    >
+        
+                        </div>
+                    </div>
+                </div>
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do colaborador 
+                        </h2>
+                        <div class="card-body">
+                            <label>Unidade</label><label class="obrigatorio">*</label> <br>
+                                <input
+                                    type="zoom"
+                                    id = "unidades"
+                                    name="unidades"
+                                    data-zoom="{
+                                        'displayKey': 'Cidade',
+                                        'datasetId':'dsUnidades',
+                                        'maximumSelectionLength':'1',
+                                        'placeholder':'Selecione a unidade',
+                                        'fields':[
+                                            {
+                                            'field':'Unidade',
+                                            'label':'Unidade'
+                                            },
+                                            {
+                                            'field':'Cidade',
+                                            'label':'Cidade',
+                                            'standard':'true'
+                                            },
+                                            {
+                                            'field':'Estado',
+                                            'label':'Estado'
+                                            },
+                                            {
+                                            'field':'Sigla',
+                                            'label':'Sigla'
+                                            }
+                                        ]
+                                    }"
+                                />
+                            <br>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Categoria de requisição</label><label class="obrigatorio">*</label>
+                                    <div class="custom-checkbox custom-checkbox-info">
+                                        <input type="checkbox" name="checkbox1" id="checkbox-1">
+                                        <label for="checkbox-1">Estagiário</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox2" id="checkbox-2">
+                                        <label for="checkbox-2">Auxiliar/Ajudante</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox3" id="checkbox-3">
+                                        <label for="checkbox-3">Assistente</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox4" id="checkbox-4">
+                                        <label for="checkbox-4">Técnico</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox5" id="checkbox-5">
+                                        <label for="checkbox-5">Analista</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox6" id="checkbox-6">
+                                        <label for="checkbox-6">Líder</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox7" id="checkbox-7">
+                                        <label for="checkbox-7">Encarregado</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox8" id="checkbox-8">
+                                        <label for="checkbox-8">Coordenador/Supervisor</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox9" id="checkbox-9">
+                                        <label for="checkbox-9">Gerente</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox10" id="checkbox-10">
+                                        <label for="checkbox-10">Diretor</label>
+                                        <br>
+                                        <input type="checkbox" name="checkbox11" id="checkbox-11">
+                                        <label for="checkbox-11">Outros</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <input name="outrosCateg" 
+                                        id="outrosCateg"
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Outros"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Cargo solicitado</label><label class="obrigatorio">*</label>
+                                    <input name="cargoSolicitado" 
+                                        id="cargoSolicitado"
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Informe o cargo a ser solicitado"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Setor</label><label class="obrigatorio">*</label> <br>
+                                    <input
+                                        type="zoom"
+                                        id = "departamentosReq"
+                                        name="departamentosReq"
+                                        data-zoom="{
+                                            'displayKey':'Nome',
+                                            'datasetId':'dsDepartamentos',
+                                            'maximumSelectionLength':'1',
+                                            'placeholder':'Selecione o departamento',
+                                            'fields':[
+                                                {
+                                                'field':'Nome',
+                                                'label':'Departamento',
+                                                'standard':'true'
+                                                }
+                                            ]
+                                        }"
+                                    />
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Tipo de contratação</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoContrat" value="clt" id="radio-1">
+                                        <label for="radio-1">CLT</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoContrat" value="estagio" id="radio-2">
+                                        <label for="radio-2">Estágio</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoContrat" value="aprendiz" id="radio-3">
+                                        <label for="radio-3">Aprendiz</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoContrat" value="temp" id="radio-4">
+                                        <label for="radio-4">Temporário</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoContrat" value="horista" id="radio-5">
+                                        <label for="radio-5">Horista</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoContrat" value="pj" id="radio-6">
+                                        <label for="radio-6">PJ</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label style="font-size: 14px">Horário de trabalho</label><label class="obrigatorio">*</label><br>
+                                    <div class="row semana semanaImpar">
+                                        <div class="form-group col-md-3 inputHora">
+                                            <input class="form-control" type="time" id="e1" name="e1">
+                                            <label for="e1">E1</label>
+                                        </div>
+                                        <div class="form-group col-md-3 inputHora">
+                                            <input class="form-control" type="time" id="s1" name="s1">
+                                            <label for="s1">S1</label>
+                                        </div>
+                                        <div class="form-group col-md-3 inputHora">
+                                            <input class="form-control" type="time" id="e2" name="e2">
+                                            <label for="e2">E2</label>
+                                        </div>
+                                        <div class="form-group col-md-3 inputHora">
+                                            <input class="form-control" type="time" id="s2" name="s2">
+                                            <label for="s2">S2</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div> 
+
+                <div class="cards row">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados Gerais
+                        </h2>
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Tipo de contratação</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="motivoRequisicao" value="aumentoQuadro" id="radio-7" onclick="aumentoQuadro();">
+                                        <label for="radio-7">Aumento do Quadro</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="motivoRequisicao" value="substituicao" id="radio-8" onclick="substituicao();">
+                                        <label for="radio-8">Substituição</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Justificativa do aumento de quadro</label><label class="obrigatorio">*</label>
+                                    <textarea name="justificativaAumentoQuadro" 
+                                        id="justificativaAumentoQuadro"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Justifique o aumento de quadro do departamento"
+                                    ></textarea>
+                                    <br>
+                                    <label>Justificativa da substituição</label><label class="obrigatorio">*</label>
+                                    <textarea name="justificativaSubstituicao" 
+                                        id="justificativaSubstituicao"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Justifique a substituição"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Nome do colaborador substituído</label><label class="obrigatorio">*</label> <br>
+                                    <input name="nomeSubstituido" 
+                                        id="nomeSubstituido"
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Informe o nome do colaborador substituído"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label>Data de saída do colaborador substituído</label><label class="obrigatorio">*</label> <br>
+                                    <input name="saidaSubstituido"
+                                        id="saidaSubstituido" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="cards row">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Requisitos do Cargo
+                        </h2>
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Idade</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="idade" value="indiferente" id="radio-9" onclick="desativaOutrosIdade();">
+                                        <label for="radio-9">Indiferente</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="idade" value="menor18" id="radio-10" onclick="desativaOutrosIdade();">
+                                        <label for="radio-10">Menor que 18</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="idade" value="maior18" id="radio-11" onclick="desativaOutrosIdade();">
+                                        <label for="radio-11">Maior que 18</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="idade" value="outrosIdade" id="radio-12" onclick="ativaOutrosIdade();">
+                                        <label for="radio-12">Outros</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <input name="outrosIdade" 
+                                        id="outrosIdade"
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Outros"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Sexo</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="sexo" value="masculino" id="radio-13">
+                                        <label for="radio-13">Masculino</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="sexo" value="feminino" id="radio-14">
+                                        <label for="radio-14">Feminino</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="sexo" value="indiferente" id="radio-15">
+                                        <label for="radio-15">Indiferente</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Escolaridade</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="escolaridade" value="ensinoFundamental" id="radio-16" onclick="desativaPeriodo();">
+                                        <label for="radio-16">Ensino Fundamental</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="escolaridade" value="ensinoMedio" id="radio-17" onclick="desativaPeriodo();">
+                                        <label for="radio-17">Ensino Médio</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="escolaridade" value="superiorIncompleto" id="radio-18" onclick="ativaPeriodo();">
+                                        <label for="radio-18">Superior Incompleto</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="escolaridade" value="superiorCompleto" id="radio-19" onclick="desativaPeriodo();">
+                                        <label for="radio-19">Superior Completo</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Período</label><label class="obrigatorio">*</label>
+                                    <input name="periodo" 
+                                        id="periodo"
+                                        class="form-control" 
+                                        type="text"
+                                        mask="#00"
+                                        maxlength = 2
+                                        placeholder="Informe o período" 
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Quais os cursos desejados</label><label class="obrigatorio">*</label>
+                                    <textarea name="cursos" 
+                                        id="cursos"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Informe os cursos desejados para a vaga"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Estado Civil</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="estadoCivil" value="solteiro" id="radio-20">
+                                        <label for="radio-20">Solteiro</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="estadoCivil" value="casado" id="radio-21">
+                                        <label for="radio-21">Casado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="estadoCivil" value="naoInterfere" id="radio-22">
+                                        <label for="radio-22">Não interfere</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Habilitação</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="ab" id="radio-23" onclick="desativaOutrosHab();">
+                                        <label for="radio-23">AB</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="a" id="radio-24" onclick="desativaOutrosHab();">
+                                        <label for="radio-24">A</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="b" id="radio-25" onclick="desativaOutrosHab();">
+                                        <label for="radio-25">B</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="c" id="radio-26" onclick="desativaOutrosHab();">
+                                        <label for="radio-26">C</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="d" id="radio-27" onclick="desativaOutrosHab();">
+                                        <label for="radio-27">D</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="e" id="radio-28" onclick="desativaOutrosHab();">
+                                        <label for="radio-28">E</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="naoInterfere" id="radio-29" onclick="desativaOutrosHab();">
+                                        <label for="radio-29">Não interfere</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="habilitacao" value="outrosHab" id="radio-30" onclick="ativaOutrosHab();">
+                                        <label for="radio-30">Outros</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <input name="outrosHab" 
+                                        id="outrosHab"
+                                        class="form-control" 
+                                        type="text" 
+                                        placeholder="Outros"
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Veículo Próprio</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="veiculoProprio" value="true" id="radio-31">
+                                        <label for="radio-31">Sim</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="veiculoProprio" value="false" id="radio-32">
+                                        <label for="radio-32">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Competências comportamentais desejáveis</label><label class="obrigatorio">*</label>
+                                    <textarea name="comportamental" 
+                                        id="comportamental"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Informe os comportamentos desejáveis"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Competências técnicas desejáveis</label><label class="obrigatorio">*</label>
+                                    <textarea name="tecnica" 
+                                        id="tecnica"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Informe as competências técnicas desejáveis"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Outras informações importantes</label>
+                                    <textarea name="outrasInfo" 
+                                        id="outrasInfo"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Informe outras informações relevantes"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cards row">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Informações do Departamento de Recursos Humanos
+                        </h2>
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Remuneração fixa</label><label class="obrigatorio">*</label>
+                                    <input name="remuneracao" 
+                                        id="remuneracao"
+                                        class="form-control" 
+                                        type="text" 
+                                        mask="#00000.00"	
+                                        maxlength=8
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Terá variável (% Comissão)?</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="variavel" value="true" id="radio-33" onclick="ativaTipoVariavel();">
+                                        <label for="radio-33">Sim</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="variavel" value="false" id="radio-34" onclick="desativaTipoVariavel();">
+                                        <label for="radio-34">Não</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Qual variável?</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoVariavel" value="comissao" id="radio-35">
+                                        <label for="radio-35">Comissão</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoVariavel" value="performance" id="radio-36">
+                                        <label for="radio-36">Performance</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoVariavel" value="gratificacao" id="radio-37">
+                                        <label for="radio-37">Gratificação</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="tipoVariavel" value="premiacao" id="radio-38">
+                                        <label for="radio-38">Premiação</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Qual o valor e as condições do variável</label><label class="obrigatorio">*</label>
+                                    <textarea name="condicoesVariavel" 
+                                        id="condicoesVariavel"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                        placeholder="Informe o valor e condições para aplicação do variável"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Método de recrutamento</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="recrutamento" value="interno" id="radio-39">
+                                        <label for="radio-39">Interno</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="recrutamento" value="externo" id="radio-40">
+                                        <label for="radio-40">Externo</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="recrutamento" value="misto" id="radio-41">
+                                        <label for="radio-41">Misto</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Sugestão</label>
+                                    <textarea name="sugestao" 
+                                        id="sugestao"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 80px;"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <label>Benefícios</label><label class="obrigatorio">*</label> <br>
+                            <div class="custom-checkbox custom-checkbox-inline custom-checkbox-info">
+                                <input type="checkbox" name="checkbox12" id="checkbox-12">
+                                <label for="checkbox-12">VT (Vale Transporte)</label>
+                            </div>
+                            <br>
+                            <div class="custom-checkbox custom-checkbox-inline custom-checkbox-info">
+                                <input type="checkbox" name="checkbox13" id="checkbox-13">
+                                <label for="checkbox-13">VA (Vale Alimentação)</label>
+                            </div>
+                            <br>
+                            <div class="custom-checkbox custom-checkbox-inline custom-checkbox-info">
+                                <input type="checkbox" name="checkbox14" id="checkbox-14">
+                                <label for="checkbox-14">VR (Vale Refeição)</label>
+                            </div>
+                            
+                            <br>
+                            <br>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Data prevista de admissão</label><label class="obrigatorio">*</label> <br>
+                                    <input name="dataAdmissao" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Gerente do Setor ou Unidade</label><label class="obrigatorio">*</label>
+                                    <input name="gerente" 
+                                        id="gerente"
+                                        class="form-control" 
+                                        type="text" 
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Validação 
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Resultado da validação</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="aprovado" id="radio-42">
+                                        <label for="radio-42">Aprovado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="reprovado" id="radio-43">
+                                        <label for="radio-43">Reprovado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="correcao" id="radio-44">
+                                        <label for="radio-44">Correção</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-md-12" style="padding-top: 10px;">
+                                    <label>Observação</label>
+                                    <textarea name="obs" 
+                                        id="obs"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px;"
+                                        placeholder=""
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Documentos para anexar 
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexoTratativa" 
+                                            id="inputAnexoTratativa" 
+                                            value="Anexo" 
+                                            onclick="showCamera();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="info_tarefa" id="info_tarefa">
+                        <input type="hidden" name="status_solicitacao" id="status_solicitacao">
+                    </div>
+                </div>
+                <div class="send">
+                    <div class="form-input">
+                        <input type="button"
+                            class="btn btn-danger button"
+                            name="buttonDiscard"
+                            id="buttonDiscard"
+                            value="Descartar"
+                            onclick="discard()"
+                        >
+
+                        <input type="button"
+                            class="btn btn-primary button"
+                            name="buttonSend"
+                            id="buttonSend"
+                            value="Enviar"
+                            onclick="send()"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

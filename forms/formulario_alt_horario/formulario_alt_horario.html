@@ -1,0 +1,1262 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+        <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+        <style>
+            body {
+                font-family: Roboto;
+                font-size: 12px;
+            }
+            .obrigatorio {
+                color: red;
+            }
+            .cards{
+                padding: 15px;
+                margin: auto;
+                width: 100%;
+            }
+            .card-solicitante{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-colaborador{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-alt {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-result {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .send {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                margin-top: 15px
+            }
+            .button {
+                padding-top: 15px;
+            }
+            #buttonSend {
+                color: white;
+                background-color: #00796B;
+                margin-left: 30px;
+            }
+            .chkBox{
+                margin-top: 16px;
+            }
+            .semana{
+                padding-top: 16px;
+                border-radius: 8px;
+                align-items: center;
+                margin: auto;
+            }
+            .semanaImpar{
+                background-color: #f4f4f4;
+            }
+            .semanaPar{
+                background-color: #fff;
+            }
+            .inputHora{
+                margin: auto;
+            }
+        </style>
+        <script>
+            $(function(){
+                var replicAt = false;
+                var replicNv = false;
+                var tarefa_atual = $("#info_tarefa").val();
+
+                if(tarefa_atual != 39){
+                    $("#chkSegAt").attr('value', 'false');
+                    $("#chkTerAt").attr('value', 'false');
+                    $("#chkQuaAt").attr('value', 'false');
+                    $("#chkQuiAt").attr('value', 'false');
+                    $("#chkSexAt").attr('value', 'false');
+                    $("#chkSabAt").attr('value', 'false');
+                    $("#chkDomAt").attr('value', 'false');
+
+                    $("#chkSegNv").attr('value', 'false');
+                    $("#chkTerNv").attr('value', 'false');
+                    $("#chkQuaNv").attr('value', 'false');
+                    $("#chkQuiNv").attr('value', 'false');
+                    $("#chkSexNv").attr('value', 'false');
+                    $("#chkSabNv").attr('value', 'false');
+                    $("#chkDomNv").attr('value', 'false');
+
+                    $("#inputAnexo").attr('disabled', 'disabled');
+                }
+                if(tarefa_atual == 0){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+                else if(tarefa_atual == 15){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+
+                /*
+                $("#chkSegAt").on('change', function() {
+                    if ($(this).is(':checked')) {
+                        $(this).attr('value', 'true');
+                    } else {
+                        $(this).attr('value', 'false');
+                    }
+                });
+                $('#checkbox-value').text($('#chkSegAt').val());
+
+                $("#chkTerAt").on('change', function() {
+                    if ($(this).is(':checked')) {
+                        $(this).attr('value', 'true');
+                    } else {
+                        $(this).attr('value', 'false');
+                    }
+                });
+                */
+            });
+
+            
+            var indice = 0; // contador para gerar um valor para cada anexo
+            function showCamera() {
+                indice++;
+                JSInterface.showCamera("Tratativa_" + indice);
+                        // css de confirmação visual
+                $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            
+            function send(){
+	            window.parent.$('[data-send]').first().click();
+            };
+
+            function discard() {
+                window.location.href=window.location.href;
+            };
+
+            function handleClick(cb) {
+                $("#chkSegAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1SegAt").removeAttr('disabled');
+                        $("#s1SegAt").removeAttr('disabled');
+                        $("#e2SegAt").removeAttr('disabled');
+                        $("#s2SegAt").removeAttr('disabled');
+                        replicAt = true;
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1SegAt").attr('disabled', 'disabled');
+                        $("#s1SegAt").attr('disabled', 'disabled');
+                        $("#e2SegAt").attr('disabled', 'disabled');
+                        $("#s2SegAt").attr('disabled', 'disabled');
+                        replicAt = false;
+                    }
+                });
+                
+                $("#chkTerAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1TerAt").removeAttr('disabled');
+                        $("#s1TerAt").removeAttr('disabled');
+                        $("#e2TerAt").removeAttr('disabled');
+                        $("#s2TerAt").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1TerAt").attr('disabled', 'disabled');
+                        $("#s1TerAt").attr('disabled', 'disabled');
+                        $("#e2TerAt").attr('disabled', 'disabled');
+                        $("#s2TerAt").attr('disabled', 'disabled');
+                    }
+                });
+                
+                $("#chkQuaAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1QuaAt").removeAttr('disabled');
+                        $("#s1QuaAt").removeAttr('disabled');
+                        $("#e2QuaAt").removeAttr('disabled');
+                        $("#s2QuaAt").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1QuaAt").attr('disabled', 'disabled');
+                        $("#s1QuaAt").attr('disabled', 'disabled');
+                        $("#e2QuaAt").attr('disabled', 'disabled');
+                        $("#s2QuaAt").attr('disabled', 'disabled');
+                    }
+                });
+                
+                $("#chkQuiAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1QuiAt").removeAttr('disabled');
+                        $("#s1QuiAt").removeAttr('disabled');
+                        $("#e2QuiAt").removeAttr('disabled');
+                        $("#s2QuiAt").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1QuiAt").attr('disabled', 'disabled');
+                        $("#s1QuiAt").attr('disabled', 'disabled');
+                        $("#e2QuiAt").attr('disabled', 'disabled');
+                        $("#s2QuiAt").attr('disabled', 'disabled');
+                    }
+                });
+                
+                $("#chkSexAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1SexAt").removeAttr('disabled');
+                        $("#s1SexAt").removeAttr('disabled');
+                        $("#e2SexAt").removeAttr('disabled');
+                        $("#s2SexAt").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1SexAt").attr('disabled', 'disabled');
+                        $("#s1SexAt").attr('disabled', 'disabled');
+                        $("#e2SexAt").attr('disabled', 'disabled');
+                        $("#s2SexAt").attr('disabled', 'disabled');
+                    }
+                });
+                
+                $("#chkSabAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1SabAt").removeAttr('disabled');
+                        $("#s1SabAt").removeAttr('disabled');
+                        $("#e2SabAt").removeAttr('disabled');
+                        $("#s2SabAt").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1SabAt").attr('disabled', 'disabled');
+                        $("#s1SabAt").attr('disabled', 'disabled');
+                        $("#e2SabAt").attr('disabled', 'disabled');
+                        $("#s2SabAt").attr('disabled', 'disabled');
+                    }
+                });
+                
+                $("#chkDomAt").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1DomAt").removeAttr('disabled');
+                        $("#s1DomAt").removeAttr('disabled');
+                        $("#e2DomAt").removeAttr('disabled');
+                        $("#s2DomAt").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1DomAt").attr('disabled', 'disabled');
+                        $("#s1DomAt").attr('disabled', 'disabled');
+                        $("#e2DomAt").attr('disabled', 'disabled');
+                        $("#s2DomAt").attr('disabled', 'disabled');
+                    }
+                });
+
+                $("#chkSegNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1SegNv").removeAttr('disabled');
+                        $("#s1SegNv").removeAttr('disabled');
+                        $("#e2SegNv").removeAttr('disabled');
+                        $("#s2SegNv").removeAttr('disabled');
+                        replicNv = true;
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1SegNv").attr('disabled', 'disabled');
+                        $("#s1SegNv").attr('disabled', 'disabled');
+                        $("#e2SegNv").attr('disabled', 'disabled');
+                        $("#s2SegNv").attr('disabled', 'disabled');
+                        replicNv = false;
+                    }
+                });
+
+                $("#chkTerNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1TerNv").removeAttr('disabled');
+                        $("#s1TerNv").removeAttr('disabled');
+                        $("#e2TerNv").removeAttr('disabled');
+                        $("#s2TerNv").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1TerNv").attr('disabled', 'disabled');
+                        $("#s1TerNv").attr('disabled', 'disabled');
+                        $("#e2TerNv").attr('disabled', 'disabled');
+                        $("#s2TerNv").attr('disabled', 'disabled');
+                    }
+                });
+
+                $("#chkQuaNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1QuaNv").removeAttr('disabled');
+                        $("#s1QuaNv").removeAttr('disabled');
+                        $("#e2QuaNv").removeAttr('disabled');
+                        $("#s2QuaNv").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1QuaNv").attr('disabled', 'disabled');
+                        $("#s1QuaNv").attr('disabled', 'disabled');
+                        $("#e2QuaNv").attr('disabled', 'disabled');
+                        $("#s2QuaNv").attr('disabled', 'disabled');
+                    }
+                });
+
+                $("#chkQuiNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1QuiNv").removeAttr('disabled');
+                        $("#s1QuiNv").removeAttr('disabled');
+                        $("#e2QuiNv").removeAttr('disabled');
+                        $("#s2QuiNv").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1QuiNv").attr('disabled', 'disabled');
+                        $("#s1QuiNv").attr('disabled', 'disabled');
+                        $("#e2QuiNv").attr('disabled', 'disabled');
+                        $("#s2QuiNv").attr('disabled', 'disabled');
+                    }
+                });
+
+                $("#chkSexNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1SexNv").removeAttr('disabled');
+                        $("#s1SexNv").removeAttr('disabled');
+                        $("#e2SexNv").removeAttr('disabled');
+                        $("#s2SexNv").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1SexNv").attr('disabled', 'disabled');
+                        $("#s1SexNv").attr('disabled', 'disabled');
+                        $("#e2SexNv").attr('disabled', 'disabled');
+                        $("#s2SexNv").attr('disabled', 'disabled');
+                    }
+                });
+
+                $("#chkSabNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1SabNv").removeAttr('disabled');
+                        $("#s1SabNv").removeAttr('disabled');
+                        $("#e2SabNv").removeAttr('disabled');
+                        $("#s2SabNv").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1SabNv").attr('disabled', 'disabled');
+                        $("#s1SabNv").attr('disabled', 'disabled');
+                        $("#e2SabNv").attr('disabled', 'disabled');
+                        $("#s2SabNv").attr('disabled', 'disabled');
+                    }
+                });
+
+                $("#chkDomNv").on('change', function() {
+                    if ($(cb).is(':checked')) {
+                        $(cb).attr('value', 'true');
+                        $("#e1DomNv").removeAttr('disabled');
+                        $("#s1DomNv").removeAttr('disabled');
+                        $("#e2DomNv").removeAttr('disabled');
+                        $("#s2DomNv").removeAttr('disabled');
+                    } else {
+                        $(cb).attr('value', 'false');
+                        $("#e1DomNv").attr('disabled', 'disabled');
+                        $("#s1DomNv").attr('disabled', 'disabled');
+                        $("#e2DomNv").attr('disabled', 'disabled');
+                        $("#s2DomNv").attr('disabled', 'disabled');
+                    }
+                });
+            }
+
+            function init(){
+                var tarefa_atual = $("#info_tarefa").val();
+
+                if(tarefa_atual == 0){
+                    $("#chkSegAt").removeAttr('disabled');
+                    $("#e1SegAt").attr('disabled', 'disabled');
+                    $("#s1SegAt").attr('disabled', 'disabled');
+                    $("#e2SegAt").attr('disabled', 'disabled');
+                    $("#s2SegAt").attr('disabled', 'disabled');
+
+                    $("#chkTerAt").removeAttr('disabled');
+                    $("#e1TerAt").attr('disabled', 'disabled');
+                    $("#s1TerAt").attr('disabled', 'disabled');
+                    $("#e2TerAt").attr('disabled', 'disabled');
+                    $("#s2TerAt").attr('disabled', 'disabled');
+
+                    $("#chkQuaAt").removeAttr('disabled');
+                    $("#e1QuaAt").attr('disabled', 'disabled');
+                    $("#s1QuaAt").attr('disabled', 'disabled');
+                    $("#e2QuaAt").attr('disabled', 'disabled');
+                    $("#s2QuaAt").attr('disabled', 'disabled');
+
+                    $("#chkQuiAt").removeAttr('disabled');
+                    $("#e1QuiAt").attr('disabled', 'disabled');
+                    $("#s1QuiAt").attr('disabled', 'disabled');
+                    $("#e2QuiAt").attr('disabled', 'disabled');
+                    $("#s2QuiAt").attr('disabled', 'disabled');
+
+                    $("#chkSexAt").removeAttr('disabled');
+                    $("#e1SexAt").attr('disabled', 'disabled');
+                    $("#s1SexAt").attr('disabled', 'disabled');
+                    $("#e2SexAt").attr('disabled', 'disabled');
+                    $("#s2SexAt").attr('disabled', 'disabled');
+
+                    $("#chkSabAt").removeAttr('disabled');
+                    $("#e1SabAt").attr('disabled', 'disabled');
+                    $("#s1SabAt").attr('disabled', 'disabled');
+                    $("#e2SabAt").attr('disabled', 'disabled');
+                    $("#s2SabAt").attr('disabled', 'disabled');
+
+                    $("#chkDomAt").removeAttr('disabled');
+                    $("#e1DomAt").attr('disabled', 'disabled');
+                    $("#s1DomAt").attr('disabled', 'disabled');
+                    $("#e2DomAt").attr('disabled', 'disabled');
+                    $("#s2DomAt").attr('disabled', 'disabled');
+                    
+                    $("#chkSegNv").removeAttr('disabled');
+                    $("#e1SegNv").attr('disabled', 'disabled');
+                    $("#s1SegNv").attr('disabled', 'disabled');
+                    $("#e2SegNv").attr('disabled', 'disabled');
+                    $("#s2SegNv").attr('disabled', 'disabled');
+
+                    $("#chkTerNv").removeAttr('disabled');
+                    $("#e1TerNv").attr('disabled', 'disabled');
+                    $("#s1TerNv").attr('disabled', 'disabled');
+                    $("#e2TerNv").attr('disabled', 'disabled');
+                    $("#s2TerNv").attr('disabled', 'disabled');
+
+                    $("#chkQuaNv").removeAttr('disabled');
+                    $("#e1QuaNv").attr('disabled', 'disabled');
+                    $("#s1QuaNv").attr('disabled', 'disabled');
+                    $("#e2QuaNv").attr('disabled', 'disabled');
+                    $("#s2QuaNv").attr('disabled', 'disabled');
+
+                    $("#chkQuiNv").removeAttr('disabled');
+                    $("#e1QuiNv").attr('disabled', 'disabled');
+                    $("#s1QuiNv").attr('disabled', 'disabled');
+                    $("#e2QuiNv").attr('disabled', 'disabled');
+                    $("#s2QuiNv").attr('disabled', 'disabled');
+
+                    $("#chkSexNv").removeAttr('disabled');
+                    $("#e1SexNv").attr('disabled', 'disabled');
+                    $("#s1SexNv").attr('disabled', 'disabled');
+                    $("#e2SexNv").attr('disabled', 'disabled');
+                    $("#s2SexNv").attr('disabled', 'disabled');
+
+                    $("#chkSabNv").removeAttr('disabled');
+                    $("#e1SabNv").attr('disabled', 'disabled');
+                    $("#s1SabNv").attr('disabled', 'disabled');
+                    $("#e2SabNv").attr('disabled', 'disabled');
+                    $("#s2SabNv").attr('disabled', 'disabled');
+
+                    $("#chkDomNv").removeAttr('disabled');
+                    $("#e1DomNv").attr('disabled', 'disabled');
+                    $("#s1DomNv").attr('disabled', 'disabled');
+                    $("#e2DomNv").attr('disabled', 'disabled');
+                    $("#s2DomNv").attr('disabled', 'disabled');
+                }
+                if(tarefa_atual == 39){
+                    $("#chkSegAt").removeAttr('disabled');
+
+                    $("#chkTerAt").removeAttr('disabled');
+
+                    $("#chkQuaAt").removeAttr('disabled');
+
+                    $("#chkQuiAt").removeAttr('disabled');
+
+                    $("#chkSexAt").removeAttr('disabled');
+
+                    $("#chkSabAt").removeAttr('disabled');
+
+                    $("#chkDomAt").removeAttr('disabled');
+                    
+                    $("#chkSegNv").removeAttr('disabled');
+
+                    $("#chkTerNv").removeAttr('disabled');
+
+                    $("#chkQuaNv").removeAttr('disabled');
+
+                    $("#chkQuiNv").removeAttr('disabled');
+
+                    $("#chkSexNv").removeAttr('disabled');
+
+                    $("#chkSabNv").removeAttr('disabled');
+
+                    $("#chkDomNv").removeAttr('disabled');
+                }
+                else {
+                    $("#chkSegAt").attr('disabled', 'disabled');
+                    $("#e1SegAt").attr('disabled', 'disabled');
+                    $("#s1SegAt").attr('disabled', 'disabled');
+                    $("#e2SegAt").attr('disabled', 'disabled');
+                    $("#s2SegAt").attr('disabled', 'disabled');
+                    
+                    $("#chkTerAt").attr('disabled', 'disabled');
+                    $("#e1TerAt").attr('disabled', 'disabled');
+                    $("#s1TerAt").attr('disabled', 'disabled');
+                    $("#e2TerAt").attr('disabled', 'disabled');
+                    $("#s2TerAt").attr('disabled', 'disabled');
+                    
+                    $("#chkQuaAt").attr('disabled', 'disabled');
+                    $("#e1QuaAt").attr('disabled', 'disabled');
+                    $("#s1QuaAt").attr('disabled', 'disabled');
+                    $("#e2QuaAt").attr('disabled', 'disabled');
+                    $("#s2QuaAt").attr('disabled', 'disabled');
+                    
+                    $("#chkQuiAt").attr('disabled', 'disabled');
+                    $("#e1QuiAt").attr('disabled', 'disabled');
+                    $("#s1QuiAt").attr('disabled', 'disabled');
+                    $("#e2QuiAt").attr('disabled', 'disabled');
+                    $("#s2QuiAt").attr('disabled', 'disabled');
+                    
+                    $("#chkSexAt").attr('disabled', 'disabled');
+                    $("#e1SexAt").attr('disabled', 'disabled');
+                    $("#s1SexAt").attr('disabled', 'disabled');
+                    $("#e2SexAt").attr('disabled', 'disabled');
+                    $("#s2SexAt").attr('disabled', 'disabled');
+                    
+                    $("#chkSabAt").attr('disabled', 'disabled');
+                    $("#e1SabAt").attr('disabled', 'disabled');
+                    $("#s1SabAt").attr('disabled', 'disabled');
+                    $("#e2SabAt").attr('disabled', 'disabled');
+                    $("#s2SabAt").attr('disabled', 'disabled');
+                    
+                    $("#chkDomAt").attr('disabled', 'disabled');
+                    $("#e1DomAt").attr('disabled', 'disabled');
+                    $("#s1DomAt").attr('disabled', 'disabled');
+                    $("#e2DomAt").attr('disabled', 'disabled');
+                    $("#s2DomAt").attr('disabled', 'disabled');
+                    
+                    $("#chkSegNv").attr('disabled', 'disabled');
+                    $("#e1SegNv").attr('disabled', 'disabled');
+                    $("#s1SegNv").attr('disabled', 'disabled');
+                    $("#e2SegNv").attr('disabled', 'disabled');
+                    $("#s2SegNv").attr('disabled', 'disabled');
+                    
+                    $("#chkTerNv").attr('disabled', 'disabled');
+                    $("#e1TerNv").attr('disabled', 'disabled');
+                    $("#s1TerNv").attr('disabled', 'disabled');
+                    $("#e2TerNv").attr('disabled', 'disabled');
+                    $("#s2TerNv").attr('disabled', 'disabled');
+                    
+                    $("#chkQuaNv").attr('disabled', 'disabled');
+                    $("#e1QuaNv").attr('disabled', 'disabled');
+                    $("#s1QuaNv").attr('disabled', 'disabled');
+                    $("#e2QuaNv").attr('disabled', 'disabled');
+                    $("#s2QuaNv").attr('disabled', 'disabled');
+                    
+                    $("#chkQuiNv").attr('disabled', 'disabled');
+                    $("#e1QuiNv").attr('disabled', 'disabled');
+                    $("#s1QuiNv").attr('disabled', 'disabled');
+                    $("#e2QuiNv").attr('disabled', 'disabled');
+                    $("#s2QuiNv").attr('disabled', 'disabled');
+                    
+                    $("#chkSexNv").attr('disabled', 'disabled');
+                    $("#e1SexNv").attr('disabled', 'disabled');
+                    $("#s1SexNv").attr('disabled', 'disabled');
+                    $("#e2SexNv").attr('disabled', 'disabled');
+                    $("#s2SexNv").attr('disabled', 'disabled');
+                    
+                    $("#chkSabNv").attr('disabled', 'disabled');
+                    $("#e1SabNv").attr('disabled', 'disabled');
+                    $("#s1SabNv").attr('disabled', 'disabled');
+                    $("#e2SabNv").attr('disabled', 'disabled');
+                    $("#s2SabNv").attr('disabled', 'disabled');
+                    
+                    $("#chkDomNv").attr('disabled', 'disabled');
+                    $("#e1DomNv").attr('disabled', 'disabled');
+                    $("#s1DomNv").attr('disabled', 'disabled');
+                    $("#e2DomNv").attr('disabled', 'disabled');
+                    $("#s2DomNv").attr('disabled', 'disabled');
+                }
+            };
+
+            function replica(at){
+                if(at && replicAt){
+                    var e1 = document.getElementById("e1SegAt").value;
+                    var s1 = document.getElementById("s1SegAt").value;
+                    var e2 = document.getElementById("e2SegAt").value;
+                    var s2 = document.getElementById("s2SegAt").value;
+                    replicAt = false;
+                    if((e1 != null || e1 != "") && (s1 != null || s1 != "") && (e2 != null || e2 != "") && (s2 != null || s2 != "")) {
+                        if(document.getElementById("chkTerAt").value == "true"){
+                            document.getElementById("e1TerAt").setAttribute('value', e1);
+                            document.getElementById("s1TerAt").setAttribute('value', s1);
+                            document.getElementById("e2TerAt").setAttribute('value', e2);
+                            document.getElementById("s2TerAt").setAttribute('value', s2);
+                        }
+                        if(document.getElementById("chkQuaAt").value == "true"){
+                            document.getElementById("e1QuaAt").setAttribute('value', e1);
+                            document.getElementById("s1QuaAt").setAttribute('value', s1);
+                            document.getElementById("e2QuaAt").setAttribute('value', e2);
+                            document.getElementById("s2QuaAt").setAttribute('value', s2);
+                        }
+                        if(document.getElementById("chkQuiAt").value == "true"){
+                            document.getElementById("e1QuiAt").setAttribute('value', e1);
+                            document.getElementById("s1QuiAt").setAttribute('value', s1);
+                            document.getElementById("e2QuiAt").setAttribute('value', e2);
+                            document.getElementById("s2QuiAt").setAttribute('value', s2);
+                        }
+                        if(document.getElementById("chkSexAt").value == "true"){
+                            document.getElementById("e1SexAt").setAttribute('value', e1);
+                            document.getElementById("s1SexAt").setAttribute('value', s1);
+                            document.getElementById("e2SexAt").setAttribute('value', e2);
+                            document.getElementById("s2SexAt").setAttribute('value', s2);
+                        }
+                    }
+                }
+                else if (!at && replicNv) {
+                    var e1 = document.getElementById("e1SegNv").value;
+                    var s1 = document.getElementById("s1SegNv").value;
+                    var e2 = document.getElementById("e2SegNv").value;
+                    var s2 = document.getElementById("s2SegNv").value;
+                    replicNv = false;
+                    if((e1 != null || e1 != "") && (s1 != null || s1 != "") && (e2 != null || e2 != "") && (s2 != null || s2 != "")) {
+                        if(document.getElementById("chkTerNv").value == "true"){
+                            document.getElementById("e1TerNv").setAttribute('value', e1);
+                            document.getElementById("s1TerNv").setAttribute('value', s1);
+                            document.getElementById("e2TerNv").setAttribute('value', e2);
+                            document.getElementById("s2TerNv").setAttribute('value', s2);
+                        }
+                        if(document.getElementById("chkQuaNv").value == "true"){
+                            document.getElementById("e1QuaNv").setAttribute('value', e1);
+                            document.getElementById("s1QuaNv").setAttribute('value', s1);
+                            document.getElementById("e2QuaNv").setAttribute('value', e2);
+                            document.getElementById("s2QuaNv").setAttribute('value', s2);
+                        }
+                        if(document.getElementById("chkQuiNv").value == "true"){
+                            document.getElementById("e1QuiNv").setAttribute('value', e1);
+                            document.getElementById("s1QuiNv").setAttribute('value', s1);
+                            document.getElementById("e2QuiNv").setAttribute('value', e2);
+                            document.getElementById("s2QuiNv").setAttribute('value', s2);
+                        }
+                        if(document.getElementById("chkSexNv").value == "true"){
+                            document.getElementById("e1SexNv").setAttribute('value', e1);
+                            document.getElementById("s1SexNv").setAttribute('value', s1);
+                            document.getElementById("e2SexNv").setAttribute('value', e2);
+                            document.getElementById("s2SexNv").setAttribute('value', s2);
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <div class="fluig-style-guide">
+            <div class="header">
+                <h1>Formulário de alteração de horário</h1>
+            </div>
+            <br><br>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <strong>Aviso!</strong> Campos marcados com <label class="obrigatorio">*</label> são obrigatórios.
+            </div>
+            <form name="form" role="form">
+                <div class="cards row">
+                    <div class="card card-solicitante col-md-10 col-md-offset-1">
+                        <h2 class="card-title">
+                            Dados do solicitante 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo" >
+                            <br>
+                            <label>Departamento</label><label class="obrigatorio">*</label> <br>
+                            <input
+                                type="zoom"
+                                id = "departamentos"
+                                name="departamentos"
+                                data-zoom="{
+                                    'displayKey':'Nome',
+                                    'datasetId':'dsDepartamentos',
+                                    'maximumSelectionLength':'1',
+                                    'placeholder':'Selecione o departamento',
+                                    'fields':[
+                                        {
+                                        'field':'Nome',
+                                        'label':'Departamento',
+                                        'standard':'true'
+                                        }
+                                    ]
+                                }"
+                            />
+                            <br>
+                            <br>
+                            <label>Número da chapa do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" >
+                            <br>
+                            <label>Email</label><label class="obrigatorio">*</label> <br>
+                            <input name="email" 
+                                class="form-control" 
+                                value="" 
+                                type="email" 
+                                placeholder="Digite o email" >
+                            <br>
+                            <label>Número da Solicitação</label><br>
+                            <input name="nrSolicitacao" 
+                                class="form-control" 
+                                type="text" 
+                                readonly
+                                style="width: 25%;"
+                                >
+        
+                        </div>
+                    </div>
+                </div>
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-10 col-md-offset-1">
+                        <h2 class="card-title">
+                            Dados do colaborador 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo"	
+                            >
+                            <br>
+                            <label>Unidade</label><label class="obrigatorio">*</label> <br>
+                                <input
+                                    type="zoom"
+                                    id = "unidades"
+                                    name="unidades"
+                                    data-zoom="{
+                                        'displayKey': 'Cidade',
+                                        'datasetId':'dsUnidades',
+                                        'maximumSelectionLength':'1',
+                                        'placeholder':'Selecione a unidade',
+                                        'fields':[
+                                            {
+                                            'field':'Unidade',
+                                            'label':'Unidade'
+                                            },
+                                            {
+                                            'field':'Cidade',
+                                            'label':'Cidade',
+                                            'standard':'true'
+                                            },
+                                            {
+                                            'field':'Estado',
+                                            'label':'Estado'
+                                            },
+                                            {
+                                            'field':'Sigla',
+                                            'label':'Sigla'
+                                            }
+                                        ]
+                                    }"
+                                />
+                            <br>
+                            <br>
+                            <label>Número da chapa do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" 
+                            >
+                            <br>
+                        </div>
+                    </div>  
+                </div> 
+                <div class="cards row">
+                    <div class="card card-alt col-md-10 col-md-offset-1">
+                        <h2 class="card-title">
+                            Dados da Solicitação
+                        </h2>
+                        <br><br>
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                            <strong>Aviso!</strong>
+                                Primeiro marque os dias que o colaborador trabalhará e preencha os horários de segunda-feira. 
+                                Assim os demais horários serão automaticamente preenchidos.
+                        </div>
+                        <div class="card-body">
+                            <label style="font-size: 14px">Horário Atual</label><br>
+                            <div class="row semana semanaImpar">
+                                <div class="col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkSegAt" type="checkbox" value="false" id="chkSegAt" onclick='handleClick(this);' onclick='handleClick(this);'>
+                                        <label for="chkSegAt">Segunda-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1SegAt" name="e1SegAt">
+                                    <label for="e1SegAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1SegAt" name="s1SegAt">
+                                    <label for="s1SegAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2SegAt" name="e2SegAt">
+                                    <label for="e2SegAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2SegAt" name="s2SegAt" onblur="replica(true);">
+                                    <label for="s2SegAt">S2</label>
+                                </div>
+                            </div>
+                            <div id="checkbox-value"></div>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkTerAt" type="checkbox" value="false" id="chkTerAt" onclick='handleClick(this);'>
+                                        <label for="chkTerAt">Terça-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1TerAt" name="e1TerAt">
+                                    <label for="e1TerAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1TerAt" name="s1TerAt">
+                                    <label for="s1TerAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2TerAt" name="e2TerAt">
+                                    <label for="e2TerAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2TerAt" name="s2TerAt">
+                                    <label for="s2TerAt">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaImpar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkQuaAt" type="checkbox" value="false" id="chkQuaAt" onclick='handleClick(this);'>
+                                        <label for="chkQuaAt">Quarta-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1QuaAt" name="e1QuaAt">
+                                    <label for="e1QuaAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1QuaAt" name="s1QuaAt">
+                                    <label for="s1QuaAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2QuaAt" name="e2QuaAt">
+                                    <label for="e2QuaAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2QuaAt" name="s2QuaAt">
+                                    <label for="s2QuaAt">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkQuiAt" type="checkbox" value="false" id="chkQuiAt" onclick='handleClick(this);'>
+                                        <label for="chkQuiAt">Quinta-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1QuiAt" name="e1QuiAt">
+                                    <label for="e1QuiAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1QuiAt" name="s1QuiAt">
+                                    <label for="s1QuiAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2QuiAt" name="e2QuiAt">
+                                    <label for="e2QuiAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2QuiAt" name="s2QuiAt">
+                                    <label for="s2QuiAt">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaImpar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkSexAt" type="checkbox" value="false" id="chkSexAt" onclick='handleClick(this);'>
+                                        <label for="chkSexAt">Sexta-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1SexAt" name="e1SexAt">
+                                    <label for="e1SexAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1SexAt" name="s1SexAt">
+                                    <label for="s1SexAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2SexAt" name="e2SexAt">
+                                    <label for="e2SexAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2SexAt" name="s2SexAt">
+                                    <label for="s2SexAt">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkSabAt" type="checkbox" value="false" id="chkSabAt" onclick='handleClick(this);'>
+                                        <label for="chkSabAt">Sábado</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1SabAt" name="e1SabAt">
+                                    <label for="e1SabAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1SabAt" name="s1SabAt">
+                                    <label for="s1SabAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2SabAt" name="e2SabAt">
+                                    <label for="e2SabAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2SabAt" name="s2SabAt">
+                                    <label for="s2SabAt">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaImpar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkDomAt" type="checkbox" value="false" id="chkDomAt" onclick='handleClick(this);'>
+                                        <label for="chkDomAt">Domingo</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1DomAt" name="e1DomAt">
+                                    <label for="e1DomAt">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1DomAt" name="s1DomAt">
+                                    <label for="s1DomAt">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2DomAt" name="e2DomAt">
+                                    <label for="e2DomAt">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2DomAt" name="s2DomAt">
+                                    <label for="s2DomAt">S2</label>
+                                </div>
+                            </div>
+                            <br>
+                            <label style="font-size: 14px">Novo Horário</label><br>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkSegNv" type="checkbox" value="false" id="chkSegNv" onclick='handleClick(this);'>
+                                        <label for="chkSegNv">Segunda-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1SegNv" name="e1SegNv">
+                                    <label for="e1SegNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1SegNv" name="s1SegNv">
+                                    <label for="s1SegNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2SegNv" name="e2SegNv">
+                                    <label for="e2SegNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2SegNv" name="s2SegNv" onblur="replica(false);">
+                                    <label for="s2SegNv">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaImpar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkTerNv" type="checkbox" value="false" id="chkTerNv" onclick='handleClick(this);'>
+                                        <label for="chkTerNv">Terça-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1TerNv" name="e1TerNv">
+                                    <label for="e1TerNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1TerNv" name="s1TerNv">
+                                    <label for="s1TerNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2TerNv" name="e2TerNv">
+                                    <label for="e2TerNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2TerNv" name="s2TerNv">
+                                    <label for="s2TerNv">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkQuaNv" type="checkbox" value="false" id="chkQuaNv" onclick='handleClick(this);'>
+                                        <label for="chkQuaNv">Quarta-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1QuaNv" name="e1QuaNv">
+                                    <label for="e1QuaNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1QuaNv" name="s1QuaNv">
+                                    <label for="s1QuaNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2QuaNv" name="e2QuaNv">
+                                    <label for="e2QuaNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2QuaNv" name="s2QuaNv">
+                                    <label for="s2QuaNv">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaImpar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkQuiNv" type="checkbox" value="false" id="chkQuiNv" onclick='handleClick(this);'>
+                                        <label for="chkQuiNv">Quinta-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1QuiNv" name="e1QuiNv">
+                                    <label for="e1QuiNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1QuiNv" name="s1QuiNv">
+                                    <label for="s1QuiNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2QuiNv" name="e2QuiNv">
+                                    <label for="e2QuiNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2QuiNv" name="s2QuiNv">
+                                    <label for="s2QuiNv">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkSexNv" type="checkbox" value="false" id="chkSexNv" onclick='handleClick(this);'>
+                                        <label for="chkSexNv">Sexta-feira</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1SexNv" name="e1SexNv">
+                                    <label for="e1SexNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1SexNv" name="s1SexNv">
+                                    <label for="s1SexNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2SexNv" name="e2SexNv">
+                                    <label for="e2SexNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2SexNv" name="s2SexNv">
+                                    <label for="s2SexNv">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaImpar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkSabNv" type="checkbox" value="false" id="chkSabNv" onclick='handleClick(this);'>
+                                        <label for="chkSabNv">Sábado</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1SabNv" name="e1SabNv">
+                                    <label for="e1SabNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1SabNv" name="s1SabNv">
+                                    <label for="s1SabNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2SabNv" name="e2SabNv">
+                                    <label for="e2SabNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2SabNv" name="s2SabNv">
+                                    <label for="s2SabNv">S2</label>
+                                </div>
+                            </div>
+                            <div class="row semana semanaPar">
+                                <div class="form-group col-md-3 col-sm-12">
+                                    <div class="custom-checkbox custom-checkbox-info chkBox">
+                                        <input name="chkDomNv" type="checkbox" value="false" id="chkDomNv" onclick='handleClick(this);'>
+                                        <label for="chkDomNv">Domingo</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e1DomNv" name="e1DomNv">
+                                    <label for="e1DomNv">E1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s1DomNv" name="s1DomNv">
+                                    <label for="s1DomNv">S1</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="e2DomNv" name="e2DomNv">
+                                    <label for="e2DomNv">E2</label>
+                                </div>
+                                <div class="form-group col-md-2 col-sm-12 inputHora">
+                                    <input class="form-control" type="time" id="s2DomNv" name="s2DomNv">
+                                    <label for="s2DomNv">S2</label>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Observação complementar</label>
+                                    <textarea name="obss" 
+                                        id="obss"
+                                        class="form-control" 
+                                        rows="3"
+                                        style="resize: vertical; min-height: 90px;"
+                                        placeholder="Complementação da escala de horário"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Data para alteração</label><label class="obrigatorio">*</label> <br>
+                                    <input name="dataAlteracao" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Data Final</label> <br>
+                                    <input name="dataFinal" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Justificativa da Solicitação</label>
+                                    <textarea name="justificativa" 
+                                        id="justificativa"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px;"
+                                        placeholder="Justifique a solicitação"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="cards row">
+                    <div class="card card-solicitante col-md-10 col-md-offset-1">
+                        <h2 class="card-title">
+                            Validação 
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Resultado da validação</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="aprovado" id="radio-1">
+                                        <label for="radio-1">Aprovado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="reprovado" id="radio-2">
+                                        <label for="radio-2">Reprovado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="correcao" id="radio-3">
+                                        <label for="radio-3">Correção</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-md-12" style="padding-top: 10px;">
+                                    <label>Observação</label>
+                                    <textarea name="obs" 
+                                        id="obs"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px;"
+                                        placeholder=""
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-10 col-md-offset-1">
+                        <h2 class="card-title">
+                            Anexos 
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexo" 
+                                            id="inputAnexo" 
+                                            value="Anexo da tratativa com o diretor" 
+                                            onclick="showCamera();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="info_tarefa" id="info_tarefa">
+                        <input type="hidden" name="status_solicitacao" id="status_solicitacao">
+                    </div>
+                </div>
+                <div class="send">
+                    <div class="form-input">
+                        <input type="button"
+                            class="btn btn-danger button"
+                            name="buttonDiscard"
+                            id="buttonDiscard"
+                            value="Descartar"
+                            onclick="discard()"
+                        >
+
+                        <input type="button"
+                            class="btn btn-primary button"
+                            name="buttonSend"
+                            id="buttonSend"
+                            value="Enviar"
+                            onclick="send()"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

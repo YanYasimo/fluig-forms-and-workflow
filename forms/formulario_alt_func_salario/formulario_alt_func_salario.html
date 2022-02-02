@@ -1,0 +1,473 @@
+<html>
+    <head>
+        <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css"/>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+        <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+        <style>
+            body {
+                font-family: Roboto;
+                font-size: 12px;
+            }
+            .obrigatorio {
+                color: red;
+            }
+            .cards{
+                padding: 15px;
+                margin: auto;
+                width: 100%;
+            }
+            .card-solicitante{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-colaborador{
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-alt {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .card-result {
+                padding: 10px;
+                margin-left: 10px;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            }
+            .send {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                margin-top: 15px
+            }
+            .button {
+                padding-top: 15px;
+            }
+            #buttonSend {
+                color: white;
+                background-color: #00796B;
+                margin-left: 30px;
+            }
+        </style>
+        <script>
+            $(function(){
+                var tarefa_atual = $("#info_tarefa").val();
+                $("#inputAnexo").attr('disabled', 'disabled');
+                $("#inputAnexoExame").attr('disabled', 'disabled');
+                
+                if(tarefa_atual == 0){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+                else if(tarefa_atual == 13){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+                else if(tarefa_atual == 66){
+                    $("#inputAnexoExame").removeAttr('disabled');
+                }
+            });
+            
+            function calc() {
+                var salAtual = Number(document.getElementById("salarioAtual").value);
+                var salNovo  = Number(document.getElementById("novoSalario").value);
+                var pctg     = ((salNovo - salAtual) / salAtual) * 100;
+                pctg = pctg.toFixed(2);
+                var result   = document.getElementById("resultd");
+
+                if (result.textContent === undefined){
+                    document.getElementById("resultd").value = pctg + "%";
+                    //result.textContent = String(pctg) + " %."; 
+                }
+                else {
+                    document.getElementById("resultd").value = pctg + "%";
+                    //result.innerText = String(pctg) + " %.";
+                }
+            };
+
+            var indice = 0; // contador para gerar um valor para cada anexo
+            function showCamera() {
+                indice++;
+                JSInterface.showCamera("Arquivo_" + indice);
+                $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            function showCameraExame() {
+                indice++;
+                JSInterface.showCamera("Anexo do Exame_" + indice);
+                $("#inputAnexoExame___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            
+            function send(){
+	            window.parent.$('[data-send]').first().click();
+            };
+
+            function discard() {
+                window.location.href=window.location.href;
+            };
+        </script>
+    </head>
+    <body>
+        <div class="fluig-style-guide">
+            <div class="header">
+                <h1>Formulário de alteração de função e salário</h1>
+            </div>
+            <br><br>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <strong>Aviso!</strong> Campos marcados com <label class="obrigatorio">*</label> são obrigatórios.
+            </div>
+            <form name="form" role="form">
+                <div class="cards row">
+                    <div class="card card-solicitante col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do solicitante 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo" >
+                            <br>
+                            <label>Departamento</label><label class="obrigatorio">*</label> <br>
+                            <input
+                                type="zoom"
+                                id = "departamentos"
+                                name="departamentos"
+                                data-zoom="{
+                                    'displayKey':'Nome',
+                                    'datasetId':'dsDepartamentos',
+                                    'maximumSelectionLength':'1',
+                                    'placeholder':'Selecione o departamento',
+                                    'fields':[
+                                        {
+                                        'field':'Nome',
+                                        'label':'Departamento',
+                                        'standard':'true'
+                                        }
+                                    ]
+                                }"
+                            />
+                            <br>
+                            <br>
+                            <label>Número da chapa do solicitante</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaSolicitante" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" >
+                            <br>
+                            <label>Email</label><label class="obrigatorio">*</label> <br>
+                            <input name="email" 
+                                class="form-control" 
+                                value="" 
+                                type="email" 
+                                placeholder="Digite o email" >
+                            <br>
+                            <label>Número da Solicitação</label><br>
+                            <input name="nrSolicitacao" 
+                                class="form-control" 
+                                type="text" 
+                                readonly
+                                style="width: 25%;"
+                                >
+        
+                        </div>
+                    </div>
+                </div>
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do colaborador 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo"	
+                            >
+                            <br>
+                            <label>Unidade</label><label class="obrigatorio">*</label> <br>
+                                <input
+                                    type="zoom"
+                                    id = "unidades"
+                                    name="unidades"
+                                    data-zoom="{
+                                        'displayKey': 'Cidade',
+                                        'datasetId':'dsUnidades',
+                                        'maximumSelectionLength':'1',
+                                        'placeholder':'Selecione a unidade',
+                                        'fields':[
+                                            {
+                                            'field':'Unidade',
+                                            'label':'Unidade'
+                                            },
+                                            {
+                                            'field':'Cidade',
+                                            'label':'Cidade',
+                                            'standard':'true'
+                                            },
+                                            {
+                                            'field':'Estado',
+                                            'label':'Estado'
+                                            },
+                                            {
+                                            'field':'Sigla',
+                                            'label':'Sigla'
+                                            }
+                                        ]
+                                    }"
+                                />
+                            <br>
+                            <br>
+                            <label>Número da chapa do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" 
+                            >
+                            <br>
+                        </div>
+                    </div>  
+                </div> 
+                <div class="cards row">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados da Solicitação
+                        </h2>
+                        
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Função Atual</label><label class="obrigatorio">*</label> <br>
+                                    <input name="funcaoAtual" 
+                                        class="form-control" 
+                                        value="" 
+                                        type="text" 
+                                        placeholder="Informe a atual função do colaborador"	>
+                                    <br>
+                                    <label>Nova Função</label><label class="obrigatorio">*</label> <br>
+                                    <input name="novaFuncao" 
+                                        class="form-control" 
+                                        value="" 
+                                        type="text" 
+                                        placeholder="Qual será a nova função do colaborador?"	
+                                    >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>É uma função nova?</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="funcNova" value="true" id="radio-1">
+                                        <label for="radio-1">Sim</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="funcNova" value="false" id="radio-2">
+                                        <label for="radio-2">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Salário Atual</label><label class="obrigatorio">*</label> <br>
+                                    <input name="salarioAtual" 
+                                        id="salarioAtual"
+                                        class="form-control" 
+                                        value="" 
+                                        type="text" 
+                                        placeholder=""
+                                        mask="#00000.00"	
+                                        maxlength=8
+                                        onblur="calc();"    >
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Novo Salário</label><label class="obrigatorio">*</label> <br>
+                                    <input name="novoSalario" 
+                                        id="novoSalario"
+                                        class="form-control" 
+                                        value="" 
+                                        type="text" 
+                                        placeholder=""
+                                        mask = "#00000.00"	
+                                        maxlength = 8
+                                        onblur="calc();"	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Aumento aproximado de</label> <br>
+                                    <input  
+                                        name = "resultd"
+                                        id = "resultd"
+                                        class = "form-control" 
+                                        type = "text"
+                                        readonly
+                                    >
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Data para alteração</label><label class="obrigatorio">*</label> <br>
+                                    <input name="dataAlteracao" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Justificativa da Solicitação</label><label class="obrigatorio">*</label>
+                                    <textarea name="justificativa" 
+                                        id="justificativa"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px;"
+                                        placeholder="Justifique a solicitação"
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>O colaborador está apto?</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="apto" value="true" id="radio-3">
+                                        <label for="radio-3">Sim</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="apto" value="false" id="radio-4">
+                                        <label for="radio-4">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Número do chamado do GLPI</label><label class="obrigatorio">*</label>
+                                    <input name="nr_chamado" 
+                                        id="nr_chamado"
+                                        class="form-control" 
+                                        type="number" 
+                                        placeholder="Informe o número do chamado aberto no GLPI"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Validação 
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Resultado da validação</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="aprovado" id="radio-5">
+                                        <label for="radio-5">Aprovado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="reprovado" id="radio-6">
+                                        <label for="radio-6">Reprovado</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="destino" value="correcao" id="radio-7">
+                                        <label for="radio-7">Correção</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="col-md-12" style="padding-top: 10px;">
+                                    <label>Observação</label>
+                                    <textarea name="obs" 
+                                        id="obs"
+                                        class="form-control" 
+                                        rows="6"
+                                        style="resize: vertical; min-height: 140px;"
+                                        placeholder=""
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Anexos 
+                        </h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexo" 
+                                            id="inputAnexo" 
+                                            value="Anexo da tratativa com o diretor" 
+                                            onclick="showCamera();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexoExame" 
+                                            id="inputAnexoExame" 
+                                            value="Anexo do exame" 
+                                            onclick="showCameraExame();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <input type="hidden" name="info_tarefa" id="info_tarefa">
+                        <input type="hidden" name="status_solicitacao" id="status_solicitacao">
+                    </div>
+                </div>
+                <div class="send">
+                    <div class="form-input">
+                        <input type="button"
+                            class="btn btn-danger button"
+                            name="buttonDiscard"
+                            id="buttonDiscard"
+                            value="Descartar"
+                            onclick="discard()"
+                        >
+
+                        <input type="button"
+                            class="btn btn-primary button"
+                            name="buttonSend"
+                            id="buttonSend"
+                            value="Enviar"
+                            onclick="send()"
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
