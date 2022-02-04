@@ -12,7 +12,6 @@
             }
             .obrigatorio {
                 color: red;
-                padding-left: 2px;
             }
             .cards{
                 padding: 15px;
@@ -56,17 +55,33 @@
             }
         </style>
         <script>
-
-            $(document).ready(function(){
-                $('[data-toggle="tooltip"]').tooltip();
+            $(function(){
+                var tarefa_atual = $("#info_tarefa").val();
+                $("#inputAnexo").attr('disabled', 'disabled');
+                $("#inputAnexoExame").attr('disabled', 'disabled');
+                
+                if(tarefa_atual == 0){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+                else if(tarefa_atual == 13){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+                else if(tarefa_atual == 67){
+                    $("#inputAnexoExame").removeAttr('disabled');
+                }
             });
             
+
             var indice = 0; // contador para gerar um valor para cada anexo
             function showCamera() {
                 indice++;
-                JSInterface.showCamera("Anexo_" + indice);
-                        // css de confirmação visual
+                JSInterface.showCamera("Arquivo_" + indice);
                 $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
+            };
+            function showCameraExame() {
+                indice++;
+                JSInterface.showCamera("Anexo do Exame_" + indice);
+                $("#inputAnexoExame___" + indice).removeClass().addClass("btn btn-success"); 
             };
             
             function send(){
@@ -81,7 +96,7 @@
     <body>
         <div class="fluig-style-guide">
             <div class="header">
-                <h1>Formulário de Correção de Processos</h1>
+                <h1>Formulário de alteração de função</h1>
             </div>
             <br><br>
             <div class="alert alert-warning alert-dismissible" role="alert">
@@ -137,79 +152,152 @@
                                 value="" 
                                 type="email" 
                                 placeholder="Digite o email" >
-                            <br>
-                            <label>Número da Solicitação</label><br>
-                            <input name="nrSolicitacao" 
-                                class="form-control" 
-                                type="text" 
-                                readonly
-                                style="width: 25%;"
-                                >
         
                         </div>
                     </div>
                 </div>
                 <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do colaborador 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo"	
+                            >
+                            <br>
+                            <label>Unidade</label><label class="obrigatorio">*</label> <br>
+                                <input
+                                    type="zoom"
+                                    id = "unidades"
+                                    name="unidades"
+                                    data-zoom="{
+                                        'displayKey': 'Cidade',
+                                        'datasetId':'dsUnidades',
+                                        'maximumSelectionLength':'1',
+                                        'placeholder':'Selecione a unidade',
+                                        'fields':[
+                                            {
+                                            'field':'Unidade',
+                                            'label':'Unidade'
+                                            },
+                                            {
+                                            'field':'Cidade',
+                                            'label':'Cidade',
+                                            'standard':'true'
+                                            },
+                                            {
+                                            'field':'Estado',
+                                            'label':'Estado'
+                                            },
+                                            {
+                                            'field':'Sigla',
+                                            'label':'Sigla'
+                                            }
+                                        ]
+                                    }"
+                                />
+                            <br>
+                            <br>
+                            <label>Número da chapa do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" 
+                            >
+                            <br>
+                        </div>
+                    </div>  
+                </div> 
+                <div class="cards row">
                     <div class="card card-alt col-md-8 col-md-offset-2">
                         <h2 class="card-title">
                             Dados da Solicitação
                         </h2>
+                        
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Nome do processo a ser corrigido</label><label class="obrigatorio">*</label> <br>
-                                    <input name="processo" 
+                                    <label>Função Atual</label><label class="obrigatorio">*</label> <br>
+                                    <input name="funcaoAtual" 
                                         class="form-control" 
+                                        value="" 
                                         type="text" 
-                                        placeholder="Digite o nome do processo"
-                                    >
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>O que deverá ser corrigido</label><label class="obrigatorio">*</label>
+                                        placeholder="Informe a atual função do colaborador"	>
                                     <br>
-                                    <small class="caracteres" for="correcao"></small>
-                                    <textarea name="correcao" 
-                                        id="correcao"
+                                    <label>Nova Função</label><label class="obrigatorio">*</label> <br>
+                                    <input name="novaFuncao" 
                                         class="form-control" 
-                                        rows="6"
-                                        style="resize: vertical; min-height: 140px; max-height: 300px;"
-                                        placeholder="Informe o que será necessário alterar"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>Alguma alteração no fluxo?</label><br>
-                                    <input name="fluxo" 
-                                        class="form-control" 
+                                        value="" 
                                         type="text" 
-                                        placeholder=""
+                                        placeholder="Qual será a nova função do colaborador?"	
                                     >
                                 </div>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Prioridade</label><br>
-                                    <input name="prioridade" 
+                                    <label>É uma função nova?</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="funcNova" value="true" id="radio-1">
+                                        <label for="radio-1">Sim</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="funcNova" value="false" id="radio-2">
+                                        <label for="radio-2">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Data para alteração</label><label class="obrigatorio">*</label> <br>
+                                    <input name="dataAlteracao" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Justificativa da Solicitação</label>
+                                    <input name="justificativa" 
                                         class="form-control" 
                                         type="text" 
-                                        placeholder="Informe o grau de prioridade"
+                                        placeholder="Justifique a solicitação"
                                     >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>O colaborador está apto?</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="apto" value="true" id="radio-3">
+                                        <label for="radio-3">Sim</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" name="apto" value="false" id="radio-4">
+                                        <label for="radio-4">Não</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div> 
-
                 <div class="cards row">
                     <div class="card card-colaborador col-md-8 col-md-offset-2">
                         <h2 class="card-title">
-                            Anexos
+                            Anexos 
                         </h2>
                         <div class="card-body">
                             <div class="row">
@@ -219,19 +307,32 @@
                                             class="btn btn-primary" 
                                             name="inputAnexo" 
                                             id="inputAnexo" 
-                                            value="Anexo" 
+                                            value="Arquivo" 
                                             onclick="showCamera();"
                                         />
                                     </div>
                                 </div>
                             </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-input">
+                                        <input type="button" 
+                                            class="btn btn-primary" 
+                                            name="inputAnexoExame" 
+                                            id="inputAnexoExame" 
+                                            value="Anexo do exame" 
+                                            onclick="showCameraExame();"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <input type="hidden" name="info_tarefa" id="info_tarefa">
                         <input type="hidden" name="status_solicitacao" id="status_solicitacao">
                     </div>
                 </div>
-
-                
                 <div class="send">
                     <div class="form-input">
                         <input type="button"

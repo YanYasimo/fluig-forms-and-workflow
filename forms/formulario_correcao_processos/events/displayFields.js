@@ -1,8 +1,13 @@
-function displayFields(form,customHTML){
+function displayFields(form,customHTML){      
+    var mode = form.getFormMode();
+    var nAtividade = form.getValue("WKNumState");
+    var nProcesso = getValue("WKNumProces");
+    form.setValue('info_tarefa', nAtividade);
+    form.setValue('nrSolicitacao', nProcesso);
 
-   var instanceId = getValue('WKNumProces');
+    log.info("Atividade Atual!!! --> " + nAtividade);
 
-   customHTML.append("<script>");
-   customHTML.append("var INSTANCEID = " + instanceId + ";");
-   customHTML.append("</script>");
+    if (mode == 'ADD'){
+        
+    }
 }

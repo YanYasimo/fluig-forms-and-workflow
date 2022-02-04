@@ -53,61 +53,90 @@
                 background-color: #00796B;
                 margin-left: 30px;
             }
-            .chkBox{
-                margin-top: 16px;
-            }
-            .semana{
-                padding-top: 16px;
-                border-radius: 8px;
-                align-items: center;
-                margin: auto;
-            }
-            .semanaImpar{
-                background-color: #f4f4f4;
-            }
-            .semanaPar{
-                background-color: #fff;
-            }
-            .inputHora{
-                margin: auto;
-            }
         </style>
         <script>
             $(function(){
                 var tarefa_atual = $("#info_tarefa").val();
-
+                $("#inputAnexo").attr('disabled', 'disabled');
+                
                 if(tarefa_atual == 0){
                     $("#inputAnexo").removeAttr('disabled');
                 }
                 else if(tarefa_atual == 15){
                     $("#inputAnexo").removeAttr('disabled');
                 }
-
-                /*
-                $("#chkSegAt").on('change', function() {
-                    if ($(this).is(':checked')) {
-                        $(this).attr('value', 'true');
-                    } else {
-                        $(this).attr('value', 'false');
-                    }
-                });
-                $('#checkbox-value').text($('#chkSegAt').val());
-
-                $("#chkTerAt").on('change', function() {
-                    if ($(this).is(':checked')) {
-                        $(this).attr('value', 'true');
-                    } else {
-                        $(this).attr('value', 'false');
-                    }
-                });
-                */
             });
 
-            
+            function init(){
+                var ferias      = document.getElementById("radio-4").value;
+                var xp          = document.getElementById("radio-5").value;
+                var outro       = document.getElementById("radio-6").value;
+                var novoCargo   = document.getElementById("radio-7").value;
+                var subst       = document.getElementById("radio-8").value;
+
+                if((ferias === null || ferias === "") && (xp === null || xp === "") && (outro === null || outro === "")) {
+                    $(".xpFuncHiden").hide();
+                    $(".cargoHiden").hide();
+                    $(".substituicaoHiden").hide();
+                    $(".outroHiden").hide();
+                }
+                
+                if(ferias == "ferias"){
+                    $(".xpFuncHiden").hide();
+                    $(".outroHiden").hide();
+                }
+                else if(xp == "experienciaFuncional"){
+                    $(".substituicaoHiden").hide();
+                    $(".outroHiden").hide();
+                    $(".cargoHiden").hide();
+                        
+                    if(novoCargo == "novoCargo"){
+                        $(".cargoHiden").show();
+                        $(".substituicaoHiden").hide();
+                    	$(".outroHiden").hide();
+                    } 
+                    else if(subst == "substituicao"){
+                        $(".substituicaoHiden").show();
+                        $(".cargoHiden").hide();
+                    	$(".outroHiden").hide();
+                    }
+                }
+                else if(outro == "outro"){
+                    $(".outroHiden").show();
+                    $(".xpFuncHiden").hide();
+                }
+            };
+
+            function xpFuncionalShow(){
+                $(".xpFuncHiden").show();
+                $(".outroHiden").hide();
+            };
+
+            function substituicaoShow(){
+                $(".substituicaoHiden").show();
+                $(".cargoHiden").hide();
+                $(".outroHiden").hide();
+            };
+
+            function outroShow(){
+                $(".xpFuncHiden").hide();
+                $(".outroHiden").show();
+            };
+
+            function ferias(){
+                $(".xpFuncHiden").hide();
+                $(".outroHiden").hide();
+            };
+
+            function novoCargo(){
+                $(".cargoHiden").show();
+                $(".substituicaoHiden").hide();
+            };
+
             var indice = 0; // contador para gerar um valor para cada anexo
             function showCamera() {
                 indice++;
-                JSInterface.showCamera("Tratativa_" + indice);
+                JSInterface.showCamera("Nome do arquivo_" + indice);
                         // css de confirmação visual
                 $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
             };
@@ -119,14 +148,12 @@
             function discard() {
                 window.location.href=window.location.href;
             };
-
-            
         </script>
     </head>
-    <body>
+    <body onload="init()">
         <div class="fluig-style-guide">
             <div class="header">
-                <h1>Formulário de alteração de horário</h1>
+                <h1>Formulário de inclusão de gratificação</h1>
             </div>
             <br><br>
             <div class="alert alert-warning alert-dismissible" role="alert">
@@ -135,7 +162,7 @@
             </div>
             <form name="form" role="form">
                 <div class="cards row">
-                    <div class="card card-solicitante col-md-10 col-md-offset-1">
+                    <div class="card card-solicitante col-md-8 col-md-offset-2">
                         <h2 class="card-title">
                             Dados do solicitante 
                         </h2>
@@ -182,20 +209,12 @@
                                 value="" 
                                 type="email" 
                                 placeholder="Digite o email" >
-                            <br>
-                            <label>Número da Solicitação</label><br>
-                            <input name="nrSolicitacao" 
-                                class="form-control" 
-                                type="text" 
-                                readonly
-                                style="width: 25%;"
-                                >
         
                         </div>
                     </div>
                 </div>
                 <div class="cards row">
-                    <div class="card card-colaborador col-md-10 col-md-offset-1">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
                         <h2 class="card-title">
                             Dados do colaborador 
                         </h2>
@@ -214,7 +233,7 @@
                                     id = "unidades"
                                     name="unidades"
                                     data-zoom="{
-                                        'displayKey': 'Cidade',
+                                        'displayKey':'Cidade',
                                         'datasetId':'dsUnidades',
                                         'maximumSelectionLength':'1',
                                         'placeholder':'Selecione a unidade',
@@ -229,12 +248,12 @@
                                             'standard':'true'
                                             },
                                             {
-                                            'field':'Estado',
-                                            'label':'Estado'
-                                            },
-                                            {
                                             'field':'Sigla',
                                             'label':'Sigla'
+                                            },
+                                            {
+                                            'field':'Estado',
+                                            'label':'Estado'
                                             }
                                         ]
                                     }"
@@ -254,121 +273,187 @@
                     </div>  
                 </div> 
                 <div class="cards row">
-                    <div class="card card-alt col-md-10 col-md-offset-1">
+                    <div class="card card-alt col-md-8 col-md-offset-2">
                         <h2 class="card-title">
                             Dados da Solicitação
                         </h2>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label style="font-size: 14px">Horário Atual</label><label class="obrigatorio">*</label> <br>
-                                    <textarea name="horaAtual" 
-                                        id="horaAtual"
-                                        class="form-control" 
-                                        rows="6"
-                                        style="resize: vertical; min-height: 140px;"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label style="font-size: 14px">Novo Horário</label><label class="obrigatorio">*</label> <br>
-                                    <textarea name="horaNova" 
-                                        id="horaNova"
-                                        class="form-control" 
-                                        rows="6"
-                                        style="resize: vertical; min-height: 140px;"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>Observação complementar</label>
-                                    <textarea name="obss" 
-                                        id="obss"
-                                        class="form-control" 
-                                        rows="3"
-                                        style="resize: vertical; min-height: 90px;"
-                                        placeholder="Complementação da escala de horário"
-                                    ></textarea>
+                                    <label>Tipo de Inclusão</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" 
+                                            name="tipoInclusao" 
+                                            value="gratificacao" 
+                                            id="radio-1" 
+                                        >
+                                        <label for="radio-1">Gratificação</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" 
+                                            name="tipoInclusao" 
+                                            value="premio" 
+                                            id="radio-2" 
+                                        >
+                                        <label for="radio-2">Prêmio</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" 
+                                            name="tipoInclusao" 
+                                            value="performance" 
+                                            id="radio-3" 
+                                        >
+                                        <label for="radio-3">Performance</label>
+                                    </div>
                                 </div>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Data para alteração</label><label class="obrigatorio">*</label> <br>
-                                    <input name="dataAlteracao" 
+                                <label>Valor Mensal</label><label class="obrigatorio">*</label> <br>
+                                <input name="gratificacao" 
+                                    class="form-control" 
+                                    value="" 
+                                    type="text" 
+                                    placeholder=""
+                                    mask="R$#00.000,00"
+                                    maxlength="8"	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Data Inicial</label><label class="obrigatorio">*</label> <br>
+                                    <input name="dataInicial" 
                                         class="form-control" 
                                         type="date" 
-                                        placeholder=""	>
+                                        placeholder="">
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Data Final</label> <br>
+                                    <label>Data Final</label><label class="obrigatorio">*</label> <br>
                                     <input name="dataFinal" 
                                         class="form-control" 
                                         type="date" 
-                                        placeholder=""	>
+                                        placeholder="">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Início de Férias do Colaborador</label><label class="obrigatorio">*</label> <br>
+                                    <input name="inicioFerias" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder="">
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Quantidade de Dias de Férias</label><label class="obrigatorio">*</label> <br>
+                                    <input name="quantidadeDiasFerias" 
+                                        class="form-control" 
+                                        type="number" >
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Motivo da Inclusão</label><label class="obrigatorio">*</label>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" 
+                                            name="motivoInclusao" 
+                                            value="ferias" 
+                                            id="radio-4"
+                                            onclick="ferias();"
+                                        >
+                                        <label for="radio-4">Férias</label>
+                                    </div>
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" 
+                                            name="motivoInclusao" 
+                                            value="experienciaFuncional" 
+                                            id="radio-5" 
+                                            onclick="xpFuncionalShow();"
+                                        >
+                                        <label for="radio-5">Experiência Funcional</label>
+                                    </div>
+                                    
+                                    <div class="custom-radio custom-radio-info">
+                                        <input type="radio" 
+                                            name="motivoInclusao" 
+                                            value="outro" 
+                                            id="radio-6" 
+                                            onclick="outroShow();"
+                                        >
+                                        <label for="radio-6">Outro</label>
+                                    </div>
+
+                                    <div class="xpFuncHiden">
+                                        <div class="col-md-12">
+                                            <br>   
+                                            <div class="custom-radio custom-radio-info">
+                                                <input type="radio" 
+                                                    name="xpFuncional" 
+                                                    value="novoCargo" 
+                                                    id="radio-7" 
+                                                    onclick="novoCargo();"
+                                                >
+                                                <label for="radio-7">Novo Cargo</label>
+                                            </div>
+                                            <div class="custom-radio custom-radio-info">
+                                                <input type="radio" 
+                                                    name="xpFuncional" 
+                                                    value="substituicao" 
+                                                    id="radio-8" 
+                                                    onclick="substituicaoShow();"
+                                                >
+                                                <label for="radio-8">Substituição</label>
+                                            </div>
+                                            <br>
+                                            <div class="cargoHiden">
+                                                <label>Cargo</label><label class="obrigatorio">*</label> <br>
+                                                <input name="cargo" 
+                                                    id="cargo"
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    placeholder="Informe o cargo" >  
+                                            </div>
+                                            <div class="substituicaoHiden">
+                                                <label>Substituindo qual colaborador?</label><label class="obrigatorio">*</label> <br>
+                                                <input name="substituicao" 
+                                                    id="substituicao"
+                                                    type="text" 
+                                                    class="form-control" 
+                                                    placeholder="Informe o colaborador que está sendo substituído" >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="outroHiden">
+                                        <input name="outro" 
+                                            id="outro"
+                                            class="form-control" 
+                                            type="text" 
+                                            placeholder="Informe o motivo da inclusão"
+                                        >
+                                        <br>
+                                    </div>
                                 </div>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label>Justificativa da Solicitação</label>
-                                    <textarea name="justificativa" 
-                                        id="justificativa"
+                                    <input name="justificativa" 
                                         class="form-control" 
-                                        rows="6"
-                                        style="resize: vertical; min-height: 140px;"
+                                        type="text" 
                                         placeholder="Justifique a solicitação"
-                                    ></textarea>
+                                    >
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div> 
-
                 <div class="cards row">
-                    <div class="card card-solicitante col-md-10 col-md-offset-1">
-                        <h2 class="card-title">
-                            Validação 
-                        </h2>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>Resultado da validação</label><label class="obrigatorio">*</label>
-                                    <div class="custom-radio custom-radio-info">
-                                        <input type="radio" name="destino" value="aprovado" id="radio-1">
-                                        <label for="radio-1">Aprovado</label>
-                                    </div>
-                                    <div class="custom-radio custom-radio-info">
-                                        <input type="radio" name="destino" value="reprovado" id="radio-2">
-                                        <label for="radio-2">Reprovado</label>
-                                    </div>
-                                    <div class="custom-radio custom-radio-info">
-                                        <input type="radio" name="destino" value="correcao" id="radio-3">
-                                        <label for="radio-3">Correção</label>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="col-md-12" style="padding-top: 10px;">
-                                    <label>Observação</label>
-                                    <textarea name="obs" 
-                                        id="obs"
-                                        class="form-control" 
-                                        rows="6"
-                                        style="resize: vertical; min-height: 140px;"
-                                        placeholder=""
-                                    ></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cards row">
-                    <div class="card card-colaborador col-md-10 col-md-offset-1">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
                         <h2 class="card-title">
                             Anexos 
                         </h2>
@@ -380,7 +465,7 @@
                                             class="btn btn-primary" 
                                             name="inputAnexo" 
                                             id="inputAnexo" 
-                                            value="Anexo da tratativa com o diretor" 
+                                            value="Arquivo" 
                                             onclick="showCamera();"
                                         />
                                     </div>
@@ -388,7 +473,6 @@
                             </div>
                         </div>
                         <input type="hidden" name="info_tarefa" id="info_tarefa">
-                        <input type="hidden" name="status_solicitacao" id="status_solicitacao">
                     </div>
                 </div>
                 <div class="send">

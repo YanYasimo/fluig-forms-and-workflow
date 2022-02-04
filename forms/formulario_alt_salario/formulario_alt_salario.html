@@ -12,7 +12,6 @@
             }
             .obrigatorio {
                 color: red;
-                padding-left: 2px;
             }
             .cards{
                 padding: 15px;
@@ -56,15 +55,39 @@
             }
         </style>
         <script>
-
-            $(document).ready(function(){
-                $('[data-toggle="tooltip"]').tooltip();
+            $(function(){
+                var tarefa_atual = $("#info_tarefa").val();
+                $("#inputAnexo").attr('disabled', 'disabled');
+                
+                if(tarefa_atual == 0){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
+                else if(tarefa_atual == 15){
+                    $("#inputAnexo").removeAttr('disabled');
+                }
             });
             
+            function calc() {
+                var salAtual = Number(document.getElementById("salarioAtual").value);
+                var salNovo  = Number(document.getElementById("novoSalario").value);
+                var pctg     = ((salNovo - salAtual) / salAtual) * 100;
+                pctg = pctg.toFixed(2);
+                var result   = document.getElementById("resultd");
+
+                if (result.textContent === undefined){
+                    document.getElementById("resultd").value = pctg + "%";
+                    //result.textContent = String(pctg) + " %."; 
+                }
+                else {
+                    document.getElementById("resultd").value = pctg + "%";
+                    //result.innerText = String(pctg) + " %.";
+                }
+            };
+
             var indice = 0; // contador para gerar um valor para cada anexo
             function showCamera() {
                 indice++;
-                JSInterface.showCamera("Anexo_" + indice);
+                JSInterface.showCamera("Tratativa_" + indice);
                         // css de confirmação visual
                 $("#inputAnexo___" + indice).removeClass().addClass("btn btn-success"); 
             };
@@ -81,7 +104,7 @@
     <body>
         <div class="fluig-style-guide">
             <div class="header">
-                <h1>Formulário de Correção de Processos</h1>
+                <h1>Formulário de alteração de salário</h1>
             </div>
             <br><br>
             <div class="alert alert-warning alert-dismissible" role="alert">
@@ -137,18 +160,69 @@
                                 value="" 
                                 type="email" 
                                 placeholder="Digite o email" >
-                            <br>
-                            <label>Número da Solicitação</label><br>
-                            <input name="nrSolicitacao" 
-                                class="form-control" 
-                                type="text" 
-                                readonly
-                                style="width: 25%;"
-                                >
         
                         </div>
                     </div>
                 </div>
+                <div class="cards row">
+                    <div class="card card-colaborador col-md-8 col-md-offset-2">
+                        <h2 class="card-title">
+                            Dados do colaborador 
+                        </h2>
+                        <div class="card-body">
+                            <label>Nome do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="nomeColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="Digite o nome completo"	
+                            >
+                            <br>
+                            <label>Unidade</label><label class="obrigatorio">*</label> <br>
+                                <input
+                                    type="zoom"
+                                    id = "unidades"
+                                    name="unidades"
+                                    data-zoom="{
+                                        'displayKey': 'Cidade',
+                                        'datasetId':'dsUnidades',
+                                        'maximumSelectionLength':'1',
+                                        'placeholder':'Selecione a unidade',
+                                        'fields':[
+                                            {
+                                            'field':'Unidade',
+                                            'label':'Unidade'
+                                            },
+                                            {
+                                            'field':'Cidade',
+                                            'label':'Cidade',
+                                            'standard':'true'
+                                            },
+                                            {
+                                            'field':'Estado',
+                                            'label':'Estado'
+                                            },
+                                            {
+                                            'field':'Sigla',
+                                            'label':'Sigla'
+                                            }
+                                        ]
+                                    }"
+                                />
+                            <br>
+                            <br>
+                            <label>Número da chapa do colaborador</label><label class="obrigatorio">*</label> <br>
+                            <input name="chapaColaborador" 
+                                class="form-control" 
+                                value="" 
+                                type="text" 
+                                placeholder="1-000000"
+                                mask="1-000000" 
+                            >
+                            <br>
+                        </div>
+                    </div>  
+                </div> 
                 <div class="cards row">
                     <div class="card card-alt col-md-8 col-md-offset-2">
                         <h2 class="card-title">
@@ -156,60 +230,69 @@
                         </h2>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <label>Nome do processo a ser corrigido</label><label class="obrigatorio">*</label> <br>
-                                    <input name="processo" 
+                                <div class="col-md-6">
+                                    <label>Salário Atual</label><label class="obrigatorio">*</label> <br>
+                                    <input name="salarioAtual" 
+                                        id="salarioAtual"
                                         class="form-control" 
-                                        type="text" 
-                                        placeholder="Digite o nome do processo"
-                                    >
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>O que deverá ser corrigido</label><label class="obrigatorio">*</label>
-                                    <br>
-                                    <small class="caracteres" for="correcao"></small>
-                                    <textarea name="correcao" 
-                                        id="correcao"
-                                        class="form-control" 
-                                        rows="6"
-                                        style="resize: vertical; min-height: 140px; max-height: 300px;"
-                                        placeholder="Informe o que será necessário alterar"
-                                    ></textarea>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>Alguma alteração no fluxo?</label><br>
-                                    <input name="fluxo" 
-                                        class="form-control" 
+                                        value="" 
                                         type="text" 
                                         placeholder=""
+                                        mask="#00000.00"	
+                                        maxlength=8
+                                        onblur="calc();"    >
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Novo Salário</label><label class="obrigatorio">*</label> <br>
+                                    <input name="novoSalario" 
+                                        id="novoSalario"
+                                        class="form-control" 
+                                        value="" 
+                                        type="text" 
+                                        placeholder=""
+                                        mask = "#00000.00"	
+                                        maxlength = 8
+                                        onblur="calc();"	>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Aumento aproximado de</label> <br>
+                                    <input  
+                                        name = "resultd"
+                                        id = "resultd"
+                                        class = "form-control" 
+                                        type = "text"
+                                        readonly
                                     >
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Data para alteração</label><label class="obrigatorio">*</label> <br>
+                                    <input name="dataAlteracao" 
+                                        class="form-control" 
+                                        type="date" 
+                                        placeholder=""	>
                                 </div>
                             </div>
                             <br>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Prioridade</label><br>
-                                    <input name="prioridade" 
+                                    <label>Justificativa da Solicitação</label>
+                                    <input name="justificativa" 
                                         class="form-control" 
                                         type="text" 
-                                        placeholder="Informe o grau de prioridade"
+                                        placeholder="Justifique a solicitação"
                                     >
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div> 
-
                 <div class="cards row">
                     <div class="card card-colaborador col-md-8 col-md-offset-2">
                         <h2 class="card-title">
-                            Anexos
+                            Anexos 
                         </h2>
                         <div class="card-body">
                             <div class="row">
@@ -219,7 +302,7 @@
                                             class="btn btn-primary" 
                                             name="inputAnexo" 
                                             id="inputAnexo" 
-                                            value="Anexo" 
+                                            value="Arquivo" 
                                             onclick="showCamera();"
                                         />
                                     </div>
@@ -230,8 +313,6 @@
                         <input type="hidden" name="status_solicitacao" id="status_solicitacao">
                     </div>
                 </div>
-
-                
                 <div class="send">
                     <div class="form-input">
                         <input type="button"

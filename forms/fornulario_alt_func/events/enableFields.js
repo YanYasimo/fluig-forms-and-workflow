@@ -1,7 +1,6 @@
 function enableFields(form) { 
     var activity = getValue('WKNumState');
-    form.setEnabled("destino", false);
-    form.setEnabled("obs", false);
+    form.setEnabled("apto", false);
     
     if (form.getFormMode() != 'ADD'){  
         form.setEnabled("nomeSolicitante",  false);
@@ -11,14 +10,13 @@ function enableFields(form) {
         form.setEnabled("nomeColaborador",  false);
         form.setEnabled("unidades",         false);
         form.setEnabled("chapaColaborador", false);
-        form.setEnabled("horaAtual", 		false);
-        form.setEnabled("horaNova", 		false);
-        form.setEnabled("obs",              false);
+        form.setEnabled("funcaoAtual",      false);
+        form.setEnabled("novaFuncao",       false);
+        form.setEnabled("funcNova",       	false);
         form.setEnabled("dataAlteracao",    false);
-        form.setEnabled("dataFinal",        false);
         form.setEnabled("justificativa",    false);
     }
-    if (activity == 39){
+    if (activity == 13){
         form.setEnabled("nomeSolicitante",  true);
         form.setEnabled("departamentos",    true);
         form.setEnabled("chapaSolicitante", true);
@@ -26,15 +24,17 @@ function enableFields(form) {
         form.setEnabled("nomeColaborador",  true);
         form.setEnabled("unidades",         true);
         form.setEnabled("chapaColaborador", true);
-        form.setEnabled("horaAtual", 		true);
-        form.setEnabled("horaNova", 		true);
-        form.setEnabled("obs",              true);
+        form.setEnabled("funcaoAtual",      true);
+        form.setEnabled("novaFuncao",       true);
+        form.setEnabled("funcNova",       	true);
         form.setEnabled("dataAlteracao",    true);
-        form.setEnabled("dataFinal",        true);
         form.setEnabled("justificativa",    true);
     }
-    if (activity == 12){
-        form.setEnabled("destino", 			true);
-        form.setEnabled("obs", 				true);
+    if (activity == 52){
+        form.setEnabled("funcaoAtual",      true);
+        form.setEnabled("novaFuncao",       true);
+    }
+    if (activity == 70){
+        form.setEnabled("apto",    			true);
     }
 }
